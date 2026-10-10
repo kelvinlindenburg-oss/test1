@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Markov Chain Attributiemodel</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; background: #f8fafc; color: #1e293b; }
+    h1 { font-size: 1.5rem; margin-bottom: 1rem; }
+    table { width: 100%; max-width: 650px; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    th { background: #f1f5f9; font-weight: 600; }
+    .num { text-align: right; }
+  </style>
+</head>
+<body>
+
+  <h1>Markov Chain Attributie Resultaten</h1>
+  <div id="output">Berekenen...</div>
+
+  <script>
+    // 1. Dataset met klantreizen
+    const journeys = [
+      { path: ['SEA', 'Social', 'Conversie'], count: 120 },
+      { path: ['SEA', 'SEO', 'Drop-off'], count: 80 },
+      { path: ['Social', 'SEA', 'Conversie'], count: 70 },
+      { path: ['Direct', 'Conversie'], count: 150 },
+      { path: ['SEA', 'Social', 'SEO', 'Conversie'], count: 40 },
+      { path: ['SEO', 'Social', 'Drop-off'], count: 90 },
+      { path: ['Social', 'Conversie'], count: 110 },
+      { path: ['SEA', 'Drop-off'], count: 130 },
+      { path: ['Direct', 'SEO', 'Conversie'], count: 60 },
+      { path: ['Social', 'SEO', 'Direct', 'Drop-off'], count: 50 }
+    ];
+
+    // 2. Overgangen tellen
+    const transitionCounts = {};
+    const channelsSet = new Set();
+
+    journeys.forEach(({ path, count }) => {
+      const fullPath = ['Start', ...path];
+      for (let i = 0; i < fullPath.length - 1; i++) {
+        const from = fullPath[i];
+        const to = fullPath[i + 1];
+
+        if (!transitionCounts[from]) transitionCounts[from] = {};
+        transitionCounts[from][to] = (transitionCounts[from][to] || 0) + count;
+
+        if (!['Start', 'Conversie', 'Drop-off'].includes(from)) channelsSet.add(from);
+        if (!['Start', 'Conversie', 'Drop-off'].includes(to)) channelsSet.add(to);
+      }
+    });
+
+    const channels = Array.from(channelsSet);
+    const transientStates = ['Start', ...channels];
+
+    // 3. Bouw de overgangsmatrix
+    function buildTransitionMatrix() {
+      const matrix = {};
+      const allStates = [...transientStates, 'Conversie', 'Drop-off'];
+      
+      allStates.forEach(s => {
+        matrix[s] = {};
+        allStates.forEach(s2 => matrix[s][s2] = 0);
+      });
+
+      for (const from in transitionCounts) {
+        const total = Object.values(transitionCounts[from]).reduce((a, b) => a + b, 0);
+        for (const to in transitionCounts[from]) {
+          matrix[from][to] = transitionCounts[from][to] / total;
+        }
+      }
+
+      matrix['Conversie']['Conversie'] = 1.0;
+      matrix['Drop-off']['Drop-off'] = 1.0;
+      return matrix;
+    }
+
+    // 4. Matrixinversie via Gauss-Jordan eliminatie: (I - Q)^(-1)
+    function invertMatrix(M) {
+      const n = M.length;
+      const A = M.map((row, i) => [
+        ...row,
+        ...Array.from({ length: n }, (_, j) => (i === j ? 1 : 0))
+      ]);
+
+      for (let i = 0; i < n; i++) {
+        let pivot = A[i][i];
+        if (Math.abs(pivot) < 1e-10) {
+          for (let j = i + 1; j < n; j++) {
+            if (Math.abs(A[j][i]) > 1e-10) {
+              [A[i], A[j]] = [A[j], A[i]];
+              pivot = A[i][i];
+              break;
+            }
+          }
+        }
+
+        for (let j = 0; j < 2 * n; j++) A[i][j] /= pivot;
+
+        for (let j = 0; j < n; j++) {
+          if (j !== i) {
+            const factor = A[j][i];
+            for (let k = 0; k < 2 * n; k++) {
+              A[j][k] -= factor * A[i][k];
+            }
+          }
+        }
+      }
+
+      return A.map(row => row.slice(n));
+    }
+
+    // 5. Absorptiekans P(Start -> Conversie) berekenen
+    function getConversionProbability(matrix) {
+      const n = transientStates.length;
+      const I_minus_Q = [];
+
+      for (let i = 0; i < n; i++) {
+        const row = [];
+        const stateI = transientStates[i];
+        for (let j = 0; j < n; j++) {
+          const stateJ = transientStates[j];
+          const qVal = matrix[stateI][stateJ] || 0;
+          row.push((i === j ? 1 : 0) - qVal);
+        }
+        I_minus_Q.push(row);
+      }
+
+      const N = invertMatrix(I_minus_Q); // Fundamentele matrix
+
+      // N * R (voor Conversie kolom)
+      let pConv = 0;
+      const startIndex = transientStates.indexOf('Start');
+      for (let j = 0; j < n; j++) {
+        const stateJ = transientStates[j];
+        const rVal = matrix[stateJ]['Conversie'] || 0;
+        pConv += N[startIndex][j] * rVal;
+      }
+
+      return pConv;
+    }
+
+    // 6. Removal effect berekenen
+    const baseMatrix = buildTransitionMatrix();
+    const pBase = getConversionProbability(baseMatrix);
+
+    const totalConversions = journeys
+      .filter(j => j.path[j.path.length - 1] === 'Conversie')
+      .reduce((sum, j) => sum + j.count, 0);
+
+    const removalEffects = {};
+
+    channels.forEach(channel => {
+      // Deep clone matrix
+      const simMatrix = JSON.parse(JSON.stringify(baseMatrix));
+
+      // Verwijder kanaal: leid alle inkomende stromen om naar Drop-off
+      for (const s of Object.keys(simMatrix)) {
+        if (s !== channel) {
+          const prob = simMatrix[s][channel];
+          simMatrix[s]['Drop-off'] += prob;
+          simMatrix[s][channel] = 0;
+        }
+      }
+
+      // Kanaal wijst zelf alleen naar Drop-off
+      for (const target of Object.keys(simMatrix[channel])) {
+        simMatrix[channel][target] = target === 'Drop-off' ? 1.0 : 0.0;
+      }
+
+      const pRemoved = getConversionProbability(simMatrix);
+      removalEffects[channel] = Math.max(0, 1 - (pRemoved / pBase));
+    });
+
+    // 7. Normaliseren en toewijzen
+    const totalRE = Object.values(removalEffects).reduce((a, b) => a + b, 0);
+    const results = channels.map(channel => {
+      const weight = removalEffects[channel] / totalRE;
+      return {
+        kanaal: channel,
+        removalEffect: removalEffects[channel],
+        gewicht: weight,
+        conversies: weight * totalConversions
+      };
+    }).sort((a, b) => b.conversies - a.conversies);
+
+    // 8. Render tabel
+    let html = `
+      <table>
+        <thead>
+          <tr>
+            <th>Kanaal</th>
+            <th class="num">Removal Effect</th>
+            <th class="num">Gewicht</th>
+            <th class="num">Toegewezen Conversies</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    results.forEach(r => {
+      html += `
+        <tr>
+          <td><strong>${r.kanaal}</strong></td>
+          <td class="num">${r.removalEffect.toFixed(3)}</td>
+          <td class="num">${(r.gewicht * 100).toFixed(1)}%</td>
+          <td class="num"><strong>${r.conversies.toFixed(1)}</strong></td>
+        </tr>
+      `;
+    });
+
+    html += `</tbody></table>`;
+    document.getElementById('output').innerHTML = html;
+  </script>
+</body>
+</html>
