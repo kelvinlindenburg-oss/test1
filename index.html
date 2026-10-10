@@ -1,6 +1,197 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
+  Here is a modern, clean navigation bar styled with a subtle frosted-glass (glassmorphic) finish, responsive mobile layout, and your 404 Pong mini-game badge built in.
+
+You can drop this directly into your index.html file—no separate CSS files required.
+
+HTML
+<!-- Place inside <head> of index.html -->
+<style>
+  :root {
+    --nav-bg: rgba(15, 17, 23, 0.75);
+    --nav-border: rgba(255, 255, 255, 0.08);
+    --text-primary: #f4f4f5;
+    --text-muted: #a1a1aa;
+    --accent: #10b981;
+    --accent-glow: rgba(16, 185, 129, 0.15);
+  }
+
+  /* Sticky, blurred backdrop header */
+  .site-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--nav-border);
+    transition: all 0.2s ease;
+  }
+
+  .nav-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Logo branding */
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .nav-brand span {
+    color: var(--accent);
+  }
+
+  /* Desktop links */
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-link {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--text-primary);
+  }
+
+  /* Highlighted Pong Badge Link */
+  .nav-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-glow);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 6px 14px;
+    border-radius: 999px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .nav-badge:hover {
+    background: var(--accent);
+    color: #09090b;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  }
+
+  /* Primary CTA Button */
+  .nav-btn {
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    background: #ffffff;
+    color: #09090b;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+  }
+
+  .nav-btn:hover {
+    opacity: 0.9;
+  }
+
+  /* Mobile hamburger button */
+  .mobile-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.4rem;
+    cursor: pointer;
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .mobile-toggle {
+      display: block;
+    }
+
+    .nav-menu {
+      position: absolute;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: #0f1117;
+      border-bottom: 1px solid var(--nav-border);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 24px;
+      display: none;
+    }
+
+    .nav-menu.open {
+      display: flex;
+    }
+
+    .nav-badge {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<!-- Place directly after <body> in index.html -->
+<header class="site-header">
+  <div class="nav-container">
+    <a href="./" class="nav-brand">
+      Brand<span>.</span>
+    </a>
+
+    <button class="mobile-toggle" aria-label="Toggle Navigation" onclick="toggleMenu()">
+      ☰
+    </button>
+
+    <nav>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="./" class="nav-link">Home</a></li>
+        <li><a href="#features" class="nav-link">Features</a></li>
+        <li><a href="#pricing" class="nav-link">Pricing</a></li>
+        <li>
+          <a href="404.html" class="nav-badge">
+            🎮 Play Pong (-15%)
+          </a>
+        </li>
+        <li><a href="#contact" class="nav-btn">Get Started</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('navMenu');
+    menu.classList.toggle('open');
+  }
+</script>
   <nav>
   <ul>
     <li><a href="/">Home</a></li>
