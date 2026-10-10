@@ -6,14 +6,17 @@
   <title>404 - Pagina niet gevonden | Speel Pong</title>
   <style>
     :root {
-      --bg: #09090b;
-      --card-bg: #18181b;
-      --border: #27272a;
-      --text: #fafafa;
-      --text-muted: #a1a1aa;
-      --accent: #10b981;
-      --accent-hover: #059669;
-      --danger: #ef4444;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #ff5a36; /* Koraalrood uit je calculator */
+      --accent-light: #fff1ee;
+      --btn-dark: #0f172a;
+      --btn-dark-hover: #1e293b;
+      --radius: 14px;
+      --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
     }
 
     * {
@@ -24,7 +27,7 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 15%, #1e1e24, var(--bg));
+      background-color: var(--bg);
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -32,40 +35,51 @@
       align-items: center;
       justify-content: center;
       padding: 24px;
-      overflow-x: hidden;
     }
 
     .container {
       width: 100%;
-      max-width: 680px;
+      max-width: 720px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid rgba(255, 90, 54, 0.25);
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
     .error-code {
-      font-size: clamp(3.5rem, 8vw, 5.5rem);
+      font-size: clamp(3rem, 7vw, 4.5rem);
       font-weight: 900;
       letter-spacing: -0.04em;
       line-height: 1;
-      color: var(--danger);
-      text-shadow: 0 0 30px rgba(239, 68, 68, 0.25);
-      margin-bottom: 4px;
+      color: var(--text);
+      margin-bottom: 6px;
     }
 
     h1 {
-      font-size: clamp(1.4rem, 3vw, 1.8rem);
-      font-weight: 700;
+      font-size: clamp(1.3rem, 2.8vw, 1.7rem);
+      font-weight: 800;
       letter-spacing: -0.02em;
-      line-height: 1.3;
       margin-bottom: 8px;
     }
 
     .subtitle {
       color: var(--text-muted);
       font-size: 0.95rem;
-      max-width: 520px;
+      max-width: 540px;
       margin-bottom: 24px;
       line-height: 1.5;
     }
@@ -74,29 +88,35 @@
       color: var(--accent);
     }
 
-    .game-wrapper {
+    /* Witte kaart behuizing voor het spel */
+    .game-card {
       position: relative;
-      background: #000;
+      background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       width: 100%;
-      touch-action: none;
+      padding: 16px;
       overflow: hidden;
+      touch-action: none;
     }
 
     canvas {
       display: block;
       width: 100%;
       height: auto;
+      border-radius: 10px;
+      background: #f1f5f9;
+      border: 1px solid var(--border);
     }
 
     /* 3 Seconden Countdown Overlay */
     .countdown-overlay {
       position: absolute;
-      inset: 0;
-      background: rgba(9, 9, 11, 0.75);
-      backdrop-filter: blur(3px);
+      inset: 16px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(4px);
+      border-radius: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -111,7 +131,7 @@
     }
 
     .countdown-number {
-      font-size: 5rem;
+      font-size: 4.5rem;
       font-weight: 900;
       color: var(--accent);
       animation: pulse 0.8s ease-in-out infinite;
@@ -119,25 +139,26 @@
 
     .countdown-text {
       color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-top: 8px;
+      font-size: 0.9rem;
+      margin-top: 6px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-weight: 600;
+      letter-spacing: 0.08em;
     }
 
     @keyframes pulse {
-      0% { transform: scale(0.9); opacity: 0.6; }
+      0% { transform: scale(0.9); opacity: 0.7; }
       50% { transform: scale(1.1); opacity: 1; }
-      100% { transform: scale(0.9); opacity: 0.6; }
+      100% { transform: scale(0.9); opacity: 0.7; }
     }
 
-    /* Modal overlay na afloop */
+    /* Einde Spel Modal */
     .game-modal {
       position: absolute;
-      inset: 0;
-      background: rgba(9, 9, 11, 0.9);
+      inset: 16px;
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(6px);
+      border-radius: 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -155,14 +176,15 @@
     }
 
     .game-modal h2 {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
+      font-weight: 800;
       margin-bottom: 8px;
     }
 
     .game-modal p {
       color: var(--text-muted);
       font-size: 0.95rem;
-      max-width: 420px;
+      max-width: 440px;
       line-height: 1.5;
       margin-bottom: 22px;
     }
@@ -170,43 +192,45 @@
     .btn {
       cursor: pointer;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       font-size: 0.9rem;
       font-weight: 600;
-      padding: 10px 18px;
-      transition: background 0.2s ease, transform 0.1s ease;
+      padding: 11px 20px;
+      transition: all 0.15s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       text-decoration: none;
+      gap: 8px;
     }
 
     .btn:active {
       transform: scale(0.98);
     }
 
-    .btn-primary {
-      background: var(--accent);
-      color: #000;
+    .btn-dark {
+      background: var(--btn-dark);
+      color: #ffffff;
     }
 
-    .btn-primary:hover {
-      background: var(--accent-hover);
+    .btn-dark:hover {
+      background: var(--btn-dark-hover);
     }
 
     .btn-outline {
-      background: transparent;
+      background: #ffffff;
       color: var(--text);
       border: 1px solid var(--border);
     }
 
     .btn-outline:hover {
-      background: var(--card-bg);
+      background: #f8fafc;
+      border-color: #cbd5e1;
     }
 
     .modal-actions {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
       justify-content: center;
     }
@@ -221,30 +245,31 @@
 <body>
 
   <main class="container">
+    <div class="badge">404 Pagina niet gevonden</div>
     <div class="error-code">404</div>
     <h1>Oeps! Deze pagina bestaat niet meer.</h1>
     <p class="subtitle">
-      De link die je hebt geopend klopt niet of is verplaatst. Versla onze AI met <strong>3 punten</strong> en ontgrendel een <strong>vrijblijvend adviesgesprek</strong>!
+      Versla onze AI met <strong>3 punten</strong> en ontgrendel direct een <strong>vrijblijvend adviesgesprek</strong>!
     </p>
 
-    <div class="game-wrapper" id="gameWrapper">
-      <!-- Countdown scherm -->
+    <div class="game-card" id="gameCard">
+      <!-- 3 Seconden Countdown -->
       <div class="countdown-overlay" id="countdownOverlay">
         <div class="countdown-number" id="countdownNumber">3</div>
         <div class="countdown-text">Spel start over...</div>
       </div>
 
-      <canvas id="pongCanvas" width="600" height="380"></canvas>
+      <canvas id="pongCanvas" width="600" height="360"></canvas>
 
-      <!-- Einde spel overlay -->
+      <!-- Win / Verlies popup -->
       <div class="game-modal" id="gameModal">
         <h2 id="modalTitle">Gefeliciteerd! Gewonnen!</h2>
         <p id="modalDesc">Je hebt onze AI verslagen. Laten we sparren over je ambities via een gratis adviesgesprek.</p>
 
         <div class="modal-actions">
-          <a href="#adviesgesprek" id="consultBtn" class="btn btn-primary">Plan vrijblijvend adviesgesprek →</a>
+          <a href="#adviesgesprek" id="consultBtn" class="btn btn-dark">Plan adviesgesprek →</a>
           <button class="btn btn-outline" onclick="restartGame()">Opnieuw spelen</button>
-          <a href="./" class="btn btn-outline">Terug naar homepage</a>
+          <a href="./" class="btn btn-outline">Naar homepage</a>
         </div>
       </div>
     </div>
@@ -278,37 +303,39 @@
         osc.frequency.value = freq;
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
         osc.start();
         osc.stop(audioCtx.currentTime + duration);
       } catch (e) {}
     }
 
+    // Peddelspecificaties: speler is groot en wendbaar, AI is kleiner en trager
     const paddleWidth = 10;
-    const paddleHeight = 70;
+    const playerHeight = 85; // Extra grote peddel voor de speler
+    const aiHeight = 65;     // Kleinere peddel voor de AI
 
     const player = {
       x: 18,
-      y: canvas.height / 2 - paddleHeight / 2,
+      y: canvas.height / 2 - playerHeight / 2,
       score: 0,
-      speed: 6.5,
+      speed: 7,
       targetY: null
     };
 
     const ai = {
       x: canvas.width - 18 - paddleWidth,
-      y: canvas.height / 2 - paddleHeight / 2,
+      y: canvas.height / 2 - aiHeight / 2,
       score: 0,
-      speed: 4.8
+      speed: 2.8 // Vertraagd: AI reageert aanzienlijk trager
     };
 
     const ball = {
       x: canvas.width / 2,
       y: canvas.height / 2,
       radius: 6,
-      speed: 5.5,
-      dx: 5.5,
+      speed: 4.8, // Iets rustigere basissnelheid
+      dx: 4.8,
       dy: 0
     };
 
@@ -326,13 +353,13 @@
       }
     });
 
-    // Touch / Muis besturing
+    // Touch & muis
     function handlePointerMove(e) {
       const rect = canvas.getBoundingClientRect();
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       const relativeY = clientY - rect.top;
       const scaleY = canvas.height / rect.height;
-      player.targetY = (relativeY * scaleY) - (paddleHeight / 2);
+      player.targetY = (relativeY * scaleY) - (playerHeight / 2);
     }
 
     canvas.addEventListener('mousemove', handlePointerMove);
@@ -342,36 +369,35 @@
     function resetBall(servingPlayer) {
       ball.x = canvas.width / 2;
       ball.y = canvas.height / 2;
-      ball.speed = 5.5;
-      ball.dx = servingPlayer === 'player' ? -5.5 : 5.5;
-      ball.dy = (Math.random() - 0.5) * 6;
+      ball.speed = 4.8;
+      ball.dx = servingPlayer === 'player' ? -4.8 : 4.8;
+      ball.dy = (Math.random() - 0.5) * 5;
     }
 
-    function checkPaddleHit(paddle) {
+    function checkCollision(paddle, pHeight) {
       return (
         ball.x - ball.radius < paddle.x + paddleWidth &&
         ball.x + ball.radius > paddle.x &&
-        ball.y - ball.radius < paddle.y + paddleHeight &&
+        ball.y - ball.radius < paddle.y + pHeight &&
         ball.y + ball.radius > paddle.y
       );
     }
 
-    // 3 Seconde Countdown functie
     function startCountdown(callback) {
       isCountingDown = true;
       countdownOverlay.classList.remove('hidden');
       let count = 3;
       countdownNumber.innerText = count;
-      playSound(300, 0.08);
+      playSound(350, 0.08);
 
       const interval = setInterval(() => {
         count--;
         if (count > 0) {
           countdownNumber.innerText = count;
-          playSound(300, 0.08);
+          playSound(350, 0.08);
         } else if (count === 0) {
           countdownNumber.innerText = "GO!";
-          playSound(600, 0.12);
+          playSound(550, 0.12);
         } else {
           clearInterval(interval);
           countdownOverlay.classList.add('hidden');
@@ -384,7 +410,7 @@
     function update() {
       if (isGameOver || isCountingDown) return;
 
-      // Speler beweging (toetsenbord)
+      // Speler besturing
       if (keys['arrowup'] || keys['w']) {
         player.y -= player.speed;
         player.targetY = null;
@@ -393,45 +419,49 @@
         player.targetY = null;
       }
 
-      // Speler beweging (touch/muis)
       if (player.targetY !== null) {
         player.y += (player.targetY - player.y) * 0.25;
       }
 
-      player.y = Math.max(0, Math.min(canvas.height - paddleHeight, player.y));
+      player.y = Math.max(0, Math.min(canvas.height - playerHeight, player.y));
 
-      // AI beweging
-      const aiTarget = ball.y - paddleHeight / 2;
-      if (ai.y < aiTarget - 8) ai.y += ai.speed;
-      else if (ai.y > aiTarget + 8) ai.y -= ai.speed;
-      ai.y = Math.max(0, Math.min(canvas.height - paddleHeight, ai.y));
+      // AI logica: mist ballen door een ruime dode hoek (+/- 24px)
+      const aiTarget = ball.y - aiHeight / 2;
+      if (ai.y < aiTarget - 24) ai.y += ai.speed;
+      else if (ai.y > aiTarget + 24) ai.y -= ai.speed;
+      ai.y = Math.max(0, Math.min(canvas.height - aiHeight, ai.y));
 
-      // Bal verplaatsen
+      // Bal beweging
       ball.x += ball.dx;
       ball.y += ball.dy;
 
-      // Boven- en onderkant botsing
+      // Boven- en onderrand botsingen
       if (ball.y - ball.radius <= 0 || ball.y + ball.radius >= canvas.height) {
         ball.dy = -ball.dy;
-        playSound(260, 0.05);
+        playSound(280, 0.04);
       }
 
-      // Paddle botsing
-      const paddle = ball.dx < 0 ? player : ai;
-      if (checkPaddleHit(paddle)) {
-        const hitOffset = (ball.y - (paddle.y + paddleHeight / 2)) / (paddleHeight / 2);
-        const maxAngle = Math.PI / 4;
-        const angle = hitOffset * maxAngle;
-
-        const direction = ball.dx < 0 ? 1 : -1;
-        ball.speed = Math.min(ball.speed + 0.35, 12);
-        ball.dx = direction * ball.speed * Math.cos(angle);
+      // Speler peddel botsing
+      if (ball.dx < 0 && checkCollision(player, playerHeight)) {
+        const hitOffset = (ball.y - (player.y + playerHeight / 2)) / (playerHeight / 2);
+        const angle = hitOffset * (Math.PI / 4);
+        ball.speed = Math.min(ball.speed + 0.25, 9.5);
+        ball.dx = ball.speed * Math.cos(angle);
         ball.dy = ball.speed * Math.sin(angle);
-
-        playSound(ball.dx > 0 ? 440 : 380, 0.06);
+        playSound(460, 0.05);
       }
 
-      // Scores
+      // AI peddel botsing
+      if (ball.dx > 0 && checkCollision(ai, aiHeight)) {
+        const hitOffset = (ball.y - (ai.y + aiHeight / 2)) / (aiHeight / 2);
+        const angle = hitOffset * (Math.PI / 4);
+        ball.speed = Math.min(ball.speed + 0.25, 9.5);
+        ball.dx = -ball.speed * Math.cos(angle);
+        ball.dy = ball.speed * Math.sin(angle);
+        playSound(380, 0.05);
+      }
+
+      // Scoreverwerking
       if (ball.x + ball.radius < 0) {
         ai.score++;
         playSound(180, 0.15);
@@ -439,19 +469,19 @@
         else resetBall('player');
       } else if (ball.x - ball.radius > canvas.width) {
         player.score++;
-        playSound(620, 0.15);
+        playSound(640, 0.15);
         if (player.score >= WINNING_SCORE) triggerGameOver(true);
         else resetBall('ai');
       }
     }
 
     function render() {
-      // Veld wissen
-      ctx.fillStyle = '#09090b';
+      // Heldere lichte achtergrond voor het veld
+      ctx.fillStyle = '#f8fafc';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Stippellijn
-      ctx.strokeStyle = '#27272a';
+      // Subtiele stippellijn in het midden
+      ctx.strokeStyle = '#cbd5e1';
       ctx.lineWidth = 2;
       ctx.setLineDash([8, 8]);
       ctx.beginPath();
@@ -461,22 +491,22 @@
       ctx.setLineDash([]);
 
       // Scores
-      ctx.fillStyle = '#71717a';
-      ctx.font = '700 32px monospace';
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '800 32px monospace';
       ctx.textAlign = 'center';
-      ctx.fillText(player.score, canvas.width / 4, 50);
-      ctx.fillText(ai.score, (canvas.width * 3) / 4, 50);
+      ctx.fillText(player.score, canvas.width / 4, 48);
+      ctx.fillText(ai.score, (canvas.width * 3) / 4, 48);
 
-      // Speler Paddle
-      ctx.fillStyle = '#10b981';
-      ctx.fillRect(player.x, player.y, paddleWidth, paddleHeight);
+      // Speler peddel (koraalrood uit je huisstijl)
+      ctx.fillStyle = '#ff5a36';
+      ctx.fillRect(player.x, player.y, paddleWidth, playerHeight);
 
-      // AI Paddle
-      ctx.fillStyle = '#a1a1aa';
-      ctx.fillRect(ai.x, ai.y, paddleWidth, paddleHeight);
+      // AI peddel (neutraal grijs/leisteen)
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillRect(ai.x, ai.y, paddleWidth, aiHeight);
 
-      // Bal
-      ctx.fillStyle = '#fafafa';
+      // Bal (donkerblauw)
+      ctx.fillStyle = '#0f172a';
       ctx.beginPath();
       ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
       ctx.fill();
@@ -496,9 +526,9 @@
         modalDesc.innerText = "Gefeliciteerd, je hebt onze AI verslagen! Plan hieronder direct een vrijblijvend adviesgesprek in.";
         consultBtn.style.display = "inline-flex";
       } else {
-        modalTitle.innerText = "Helaas, de AI wint!";
-        modalTitle.style.color = "var(--danger)";
-        modalDesc.innerText = "Net niet! Probeer het gerust nog een keer om alsnog een gesprek te ontgrendelen.";
+        modalTitle.innerText = "Net niet!";
+        modalTitle.style.color = "var(--text)";
+        modalDesc.innerText = "De AI had net wat geluk. Probeer het nog een keer om het gesprek te ontgrendelen.";
         consultBtn.style.display = "none";
       }
       modal.classList.add('visible');
@@ -513,7 +543,7 @@
       startCountdown();
     }
 
-    // Start spel met afteller
+    // Initialisatie
     resetBall('player');
     startCountdown();
     gameLoop();
