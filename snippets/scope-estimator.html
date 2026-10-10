@@ -1,0 +1,160 @@
+<div class="scope-estimator" id="seio-scope-app">
+  <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #ff4b2b; background: #fff1ee; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.05em;">PROJECT SCOPE CALCULATOR</span>
+  <h2 style="margin: 8px 0 6px; font-size: 18px; color: #111827;">Project Timeline & Scope Schatter</h2>
+  <p style="font-size: 13px; color: #4b5563; margin-bottom: 16px;">Selecteer één of meerdere onderdelen om de doorlooptijd en procesfases realtime te berekenen.</p>
+
+  <!-- 10 Modules Grid -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px; margin-bottom: 20px;" id="scope-items-grid">
+    
+    <label class="scope-pill" style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
+      <input type="checkbox" value="notion_core" data-weeks="2" data-phase="2,3" checked style="accent-color: #ff4b2b; margin-top: 2px;">
+      <span style="font-size: 12px; line-height: 1.3;"><strong>Centrale Notion Workspace</strong><br><span style="color: #6b7280; font-size: 11px;">Teamhub, CRM & Sprints</span></span>
+    </label>
+
+    <label class="scope-pill" style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
+      <input type="checkbox" value="seo_audit" data-weeks="1.5" data-phase="1,2" checked style="accent-color: #ff4b2b; margin-top: 2px;">
+      <span style="font-size: 12px; line-height: 1.3;"><strong>SEO & GEO Audit</strong><br><span style="color: #6b7280; font-size: 11px;">AI-vindbaarheid & keyword SERP</span></span>
+    </label>
+
+    <label class="scope-pill" style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
+      <input type="checkbox" value="ad_campaigns" data-weeks="2" data-phase="2,3" style="accent-color: #ff4b2b; margin-top: 2px;">
+      <span style="font-size: 12px; line-height: 1.3;"><strong>Multi-Channel Ads Setup</strong><br><span style="color: #6b7280; font-size: 11px;">Meta & Google Ads funnels</span></span>
+    </label>
+
+    <label class="scope-pill" style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
+      <input type="checkbox" value="ai_workflows" data-weeks="1.5" data-phase="3" style="accent-color: #ff4b2b; margin-top: 2px;">
+      <span style="font-size: 12px; line-height: 1.3;"><strong>AI & Automatiseringen</strong><br><span style="color: #6b7280; font-size: 11px;">Make/Zapier dataflows</span></span>
+    </label>
+
+    <label class="scope-pill" style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
+      <input type="checkbox" value="topic_clusters" data-weeks="2" data-phase="2,3" style="accent-color: #ff4b2b; margin-top: 2px;">
+      <span style="font-size: 12px; line-height: 1.3;"><strong>Topic Cluster Content Hub</strong><br><span style="color: #6b7280; font-size: 11px;">Pillar pages & contentkalender</span></span>
+    </label>
+
+    <label class="scope-pill" style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
+      <input type="checkbox" value="analytics" data-weeks="1" data-phase="1,3" style="accent-color: #ff4b2b; margin-top: 2px;">
+      <span style="font-size: 12px; line-height: 1.3;"><strong>Tracking & Dashboards</strong><br><span style="color: #6b7280; font-size: 11px;">GA4, Conversie-API & rapport</span></span>
+    </label>
+
+    <label class="scope-pill" style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
+      <input type="checkbox" value="client_portal" data-weeks="1.5" data-phase="2,3" style="accent-color: #ff4b2b; margin-top: 2px;">
+      <span style="font-size: 12px; line-height: 1.3;"><strong>Klantportalen & Hubs</strong><br><span style="color: #6b7280; font-size: 11px;">Afgeschermde Notion dashboards</span></span>
+    </label>
+
+    <label class="scope-pill" style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
+      <input type="checkbox" value="sop_library" data-weeks="1" data-phase="4" style="accent-color: #ff4b2b; margin-top: 2px;">
+      <span style="font-size: 12px; line-height: 1.3;"><strong>SOP- & Kennisbank</strong><br><span style="color: #6b7280; font-size: 11px;">Vaste teamplaybooks & templates</span></span>
+    </label>
+
+    <label class="scope-pill" style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
+      <input type="checkbox" value="cro_audit" data-weeks="1" data-phase="1,4" style="accent-color: #ff4b2b; margin-top: 2px;">
+      <span style="font-size: 12px; line-height: 1.3;"><strong>Conversie- & Funnel Audit</strong><br><span style="color: #6b7280; font-size: 11px;">Drop-off analyse & A/B roadmaps</span></span>
+    </label>
+
+    <label class="scope-pill" style="display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
+      <input type="checkbox" value="team_training" data-weeks="1" data-phase="4" style="accent-color: #ff4b2b; margin-top: 2px;">
+      <span style="font-size: 12px; line-height: 1.3;"><strong>Team Training & Overdracht</strong><br><span style="color: #6b7280; font-size: 11px;">Live sessies en werkwijze borging</span></span>
+    </label>
+  </div>
+
+  <!-- Realtime Resultaat Box -->
+  <div style="background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 16px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">
+      <div>
+        <span style="font-size: 11px; text-transform: uppercase; color: #6b7280; font-weight: 700;">Geschatte doorlooptijd:</span>
+        <div id="scope-duration" style="font-size: 18px; font-weight: 800; color: #ff4b2b;">Berekenen...</div>
+      </div>
+      <div style="text-align: right;">
+        <span style="font-size: 11px; text-transform: uppercase; color: #6b7280; font-weight: 700;">Geselecteerd:</span>
+        <div id="scope-count" style="font-size: 14px; font-weight: 700; color: #111827;">0 / 10 modules</div>
+      </div>
+    </div>
+
+    <!-- 4-Stappen Proces Impact -->
+    <strong style="font-size: 12px; color: #374151; display: block; margin-bottom: 8px;">Actieve SEIO-fases in deze sprint:</strong>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 6px;" id="scope-phases">
+      <div id="phase-1" style="font-size: 11px; padding: 6px 8px; border-radius: 4px; background: #fff; border: 1px solid #e5e7eb; color: #9ca3af;">1. Analyse & Audit</div>
+      <div id="phase-2" style="font-size: 11px; padding: 6px 8px; border-radius: 4px; background: #fff; border: 1px solid #e5e7eb; color: #9ca3af;">2. Architectuur</div>
+      <div id="phase-3" style="font-size: 11px; padding: 6px 8px; border-radius: 4px; background: #fff; border: 1px solid #e5e7eb; color: #9ca3af;">3. Implementatie</div>
+      <div id="phase-4" style="font-size: 11px; padding: 6px 8px; border-radius: 4px; background: #fff; border: 1px solid #e5e7eb; color: #9ca3af;">4. Overdracht</div>
+    </div>
+
+    <!-- CTA -->
+    <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <span style="font-size: 12px; color: #6b7280;">Vaste sprintprijs & roadmap op maat.</span>
+      <a href="mailto:Kelvinlindenburg@gmail.com?subject=Project%20Scope%20Aanvraag" style="display: inline-block; background: #111827; color: #fff; padding: 8px 16px; border-radius: 6px; font-size: 12px; font-weight: 600; text-decoration: none; transition: background 0.15s ease;">Plan scope-gesprek →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const root = document.getElementById("seio-scope-app");
+    if (!root) return;
+
+    const checkboxes = root.querySelectorAll('input[type="checkbox"]');
+    const durationEl = root.querySelector("#scope-duration");
+    const countEl = root.querySelector("#scope-count");
+    const pills = root.querySelectorAll(".scope-pill");
+
+    const phases = {
+      1: root.querySelector("#phase-1"),
+      2: root.querySelector("#phase-2"),
+      3: root.querySelector("#phase-3"),
+      4: root.querySelector("#phase-4")
+    };
+
+    function calculateScope() {
+      let selectedCheckboxes = [];
+      let totalRawWeeks = 0;
+      let activePhases = new Set();
+
+      checkboxes.forEach((cb, idx) => {
+        const pill = pills[idx];
+        if (cb.checked) {
+          selectedCheckboxes.push(cb);
+          totalRawWeeks += parseFloat(cb.getAttribute("data-weeks"));
+          cb.getAttribute("data-phase").split(",").forEach(p => activePhases.add(parseInt(p, 10)));
+          pill.style.borderColor = "#ff4b2b";
+          pill.style.background = "#fff8f6";
+        } else {
+          pill.style.borderColor = "#e5e7eb";
+          pill.style.background = "#f9fafb";
+        }
+      });
+
+      const count = selectedCheckboxes.length;
+      countEl.textContent = count + " / 10 modules";
+
+      if (count === 0) {
+        durationEl.textContent = "0 weken (Selecteer minimaal 1 module)";
+        durationEl.style.color = "#9ca3af";
+      } else {
+        // Parallelle workflow-berekening: sprints lopen deels gelijktijdig
+        // Basis opzet = 1 week baseline + gedempte toename per module
+        let estimatedWeeks = Math.max(1.5, Math.round((1 + (totalRawWeeks * 0.45)) * 2) / 2);
+        durationEl.textContent = "~" + estimatedWeeks + " - " + (estimatedWeeks + 1) + " weken";
+        durationEl.style.color = "#ff4b2b";
+      }
+
+      // Update de 4 fasen indicators
+      [1, 2, 3, 4].forEach(p => {
+        const el = phases[p];
+        if (activePhases.has(p)) {
+          el.style.background = "#fff1ee";
+          el.style.borderColor = "#ffd8cf";
+          el.style.color = "#ff4b2b";
+          el.style.fontWeight = "700";
+        } else {
+          el.style.background = "#ffffff";
+          el.style.borderColor = "#e5e7eb";
+          el.style.color = "#9ca3af";
+          el.style.fontWeight = "normal";
+        }
+      });
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener("change", calculateScope));
+    calculateScope(); // Eerste berekening direct uitvoeren
+  })();
+</script>
