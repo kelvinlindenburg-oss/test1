@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oefen Belastingaangifte - Simpel uitgelegd</title>
+  <style>
+    :root {
+      --primary: #004c97;
+      --primary-light: #e6f0fa;
+      --success: #2e7d32;
+      --success-light: #e8f5e9;
+      --warning: #ed6c02;
+      --warning-light: #fff4e5;
+      --border: #d0d7de;
+      --bg: #f6f8fa;
+      --text: #24292f;
+      --text-muted: #57606a;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    header {
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 15px;
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      color: var(--primary);
+    }
+
+    .intro {
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Knoppen om voorbeeld in te vullen */
+    .presets {
+      background: var(--primary-light);
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+    }
+
+    .presets p {
+      margin: 0 0 10px 0;
+      font-weight: 600;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button.btn-reset {
+      background-color: #6e7781;
+    }
+
+    /* Veldstijlen */
+    fieldset {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    legend {
+      font-weight: bold;
+      color: var(--primary);
+      padding: 0 8px;
+      font-size: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .explanation {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .currency-symbol {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px 12px 8px 25px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 15px;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 76, 151, 0.15);
+    }
+
+    /* Resultaatkaart */
+    .result-card {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      background: #fafafa;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eaeaea;
+    }
+
+    .result-row.total {
+      font-weight: bold;
+      font-size: 18px;
+      border-top: 2px solid var(--border);
+      border-bottom: none;
+      margin-top: 10px;
+      padding-top: 15px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .status-refund {
+      background-color: var(--success-light);
+      color: var(--success);
+    }
+
+    .status-pay {
+      background-color: var(--warning-light);
+      color: var(--warning);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Oefenen: Inkomstenbelasting (Box 1)</h1>
+      <p class="intro">
+        Belastingaangifte doen is eigenlijk een simpele rekensom: 
+        <strong>Wat had je moeten betalen</strong> min <strong>wat je baas al heeft ingehouden</strong>. 
+        Vul de velden in of kies een voorbeeldscenario om te zien hoe het werkt.
+      </p>
+    </header>
+
+    <!-- Snel voorbeelden inladen -->
+    <section class="presets">
+      <p>💡 Snelle test - kies een situatie:</p>
+      <div class="btn-group">
+        <button type="button" id="btnStudent">Student (Bijbaan / Vakantiewerk)</button>
+        <button type="button" id="btnFulltime">Starter (Fulltime baan)</button>
+        <button type="button" id="btnReset" class="btn-reset">Formulier Leegmaken</button>
+      </div>
+    </section>
+
+    <!-- Formulier -->
+    <form id="taxForm">
+      
+      <!-- STAP 1: Inkomen -->
+      <fieldset>
+        <legend>Stap 1: Wat heb je verdiend?</legend>
+        <div class="form-group">
+          <label for="income">Bruto jaarloon (Loon voor loonheffing)</label>
+          <div class="explanation">
+            Dit staat op je <strong>Jaaropgave</strong> bij "Loon voor loonheffing" of "Fiscaal loon". Dit is je totale salaris van het hele jaar vóórdat er belasting afging.
+          </div>
+          <div class="input-wrapper">
+            <span class="currency-symbol">€</span>
+            <input type="number" id="income" min="0" placeholder="0" step="10">
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- STAP 2: Al betaald via salaris -->
+      <fieldset>
+        <legend>Stap 2: Wat heb je al vooruitbetaald?</legend>
+        <div class="form-group">
+          <label for="withheld">Ingehouden loonheffing</label>
+          <div class="explanation">
+            Je werkgever houdt elke maand al belasting in op je salaris. Dit bedrag staat op je <strong>Jaaropgave</strong> onder "Ingehouden loonheffing" of "Loonbelasting".
+          </div>
+          <div class="input-wrapper">
+            <span class="currency-symbol">€</span>
+            <input type="number" id="withheld" min="0" placeholder="0" step="10">
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- STAP 3: Heffingskortingen -->
+      <fieldset>
+        <legend>Stap 3: Loonheffingskorting toegepast?</legend>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="taxCreditApplied" checked> 
+            Loonheffingskorting stond 'AAN' bij de werkgever
+          </label>
+          <div class="explanation">
+            Dit is de korting waardoor je maandelijks netto meer uitbetaald kreeg. (Let op: als je 2 banen tegelijk had en bij allebei de korting 'aan' stond, moet je vaak bijbetalen).
+          </div>
+        </div>
+      </fieldset>
+
+    </form>
+
+    <!-- Live Uitslag -->
+    <section class="result-card" id="results" aria-live="polite">
+      <h3>De Rekensom</h3>
+      
+      <div class="result-row">
+        <span>1. Bruto belasting over je inkomen (~36,97% basistarief):</span>
+        <span id="taxGross">€ 0,00</span>
+      </div>
+
+      <div class="result-row">
+        <span>2. Korting van de staat (Algemene heffingskorting + Arbeidskorting):</span>
+        <span id="taxCredits">− € 0,00</span>
+      </div>
+
+      <div class="result-row">
+        <span><strong>3. Wat je écht aan belasting had moeten betalen:</strong></span>
+        <span id="taxDue">€ 0,00</span>
+      </div>
+
+      <div class="result-row">
+        <span>4. Wat je baas al heeft afgedragen (Voorheffing):</span>
+        <span id="taxPrepaid">€ 0,00</span>
+      </div>
+
+      <div class="result-row total">
+        <span id="finalLabel">Eindresultaat:</span>
+        <span id="finalAmount">€ 0,00</span>
+      </div>
+
+      <div id="statusMessage"></div>
+    </section>
+  </div>
+
+  <script>
+    // --- ELEMENTEN SELECTEREN ---
+    const incomeInput = document.getElementById('income');
+    const withheldInput = document.getElementById('withheld');
+    const taxCreditCheckbox = document.getElementById('taxCreditApplied');
+
+    const taxGrossEl = document.getElementById('taxGross');
+    const taxCreditsEl = document.getElementById('taxCredits');
+    const taxDueEl = document.getElementById('taxDue');
+    const taxPrepaidEl = document.getElementById('taxPrepaid');
+    const finalAmountEl = document.getElementById('finalAmount');
+    const finalLabelEl = document.getElementById('finalLabel');
+    const statusMsgEl = document.getElementById('statusMessage');
+
+    const btnStudent = document.getElementById('btnStudent');
+    const btnFulltime = document.getElementById('btnFulltime');
+    const btnReset = document.getElementById('btnReset');
+
+    // Hulpfunctie: Valuta formatteren
+    function formatEuro(amount) {
+      return new Intl.NumberFormat('nl-NL', {
+        style: 'currency',
+        currency: 'EUR'
+      }).format(amount);
+    }
+
+    // --- REKENLOGICA (Vereenvoudigde Nederlandse Box 1 regels) ---
+    function calculateTaxes() {
+      const income = parseFloat(incomeInput.value) || 0;
+      const withheld = parseFloat(withheldInput.value) || 0;
+      const hasTaxCredit = taxCreditCheckbox.checked;
+
+      // 1. Basistarief (Schijf 1: ~36,97%, Schijf 2 boven ~€75.000: 49,50%)
+      const bracketLimit = 75518;
+      let grossTax = 0;
+
+      if (income <= bracketLimit) {
+        grossTax = income * 0.3697;
+      } else {
+        grossTax = (bracketLimit * 0.3697) + ((income - bracketLimit) * 0.4950);
+      }
+
+      // 2. Heffingskortingen (Algemene heffingskorting + Arbeidskorting benadering)
+      // Iedereen met een inkomen heeft hier recht op bij de jaaraangifte
+      let generalCredit = 0;
+      if (income > 0) {
+        if (income <= 24812) {
+          generalCredit = 3362;
+        } else if (income < 75518) {
+          generalCredit = Math.max(0, 3362 - 0.0663 * (income - 24812));
+        }
+
+        // Arbeidskorting (opbouw en afbouw)
+        let laborCredit = 0;
+        if (income <= 11490) {
+          laborCredit = income * 0.084;
+        } else if (income <= 24820) {
+          laborCredit = 965 + (income - 11490) * 0.314;
+        } else if (income <= 39957) {
+          laborCredit = 5158;
+        } else {
+          laborCredit = Math.max(0, 5158 - 0.0651 * (income - 39957));
+        }
+
+        generalCredit += laborCredit;
+      }
+
+      // De korting mag nooit hoger zijn dan de verschuldigde belasting
+      const actualCredits = Math.min(grossTax, generalCredit);
+      const taxDue = Math.max(0, grossTax - actualCredits);
+
+      // 3. Verschil met wat al ingehouden is
+      // Als resultaat negatief is: je krijgt geld terug (withheld > taxDue)
+      const difference = taxDue - withheld;
+
+      // --- WEERGAVE BIJWERKEN ---
+      taxGrossEl.textContent = formatEuro(grossTax);
+      taxCreditsEl.textContent = "− " + formatEuro(actualCredits);
+      taxDueEl.textContent = formatEuro(taxDue);
+      taxPrepaidEl.textContent = formatEuro(withheld);
+
+      if (income === 0 && withheld === 0) {
+        finalLabelEl.textContent = "Eindresultaat:";
+        finalAmountEl.textContent = "€ 0,00";
+        statusMsgEl.innerHTML = "";
+        return;
+      }
+
+      if (difference < -1) {
+        // Geld terug
+        const refund = Math.abs(difference);
+        finalLabelEl.textContent = "🎉 Je krijgt terug:";
+        finalAmountEl.textContent = formatEuro(refund);
+        finalAmountEl.style.color = "var(--success)";
+        statusMsgEl.innerHTML = `
+          <div class="status-badge status-refund">
+            Goed nieuws! Je baas heeft meer belasting ingehouden dan wettelijk nodig was. Dit verschil stort de Belastingdienst terug.
+          </div>
+        `;
+      } else if (difference > 1) {
+        // Bijbetalen
+        finalLabelEl.textContent = "⚠️ Je moet bijbetalen:";
+        finalAmountEl.textContent = formatEuro(difference);
+        finalAmountEl.style.color = "var(--warning)";
+        statusMsgEl.innerHTML = `
+          <div class="status-badge status-pay">
+            Let op: Er is te weinig belasting ingehouden op je salaris. Je moet dit bedrag overmaken naar de Belastingdienst.
+          </div>
+        `;
+      } else {
+        // Quitte
+        finalLabelEl.textContent = "Eindresultaat:";
+        finalAmountEl.textContent = "€ 0,00";
+        finalAmountEl.style.color = "var(--text)";
+        statusMsgEl.innerHTML = `
+          <div class="status-badge">
+            Precies goed! De voorheffing klopt exact met de verschuldigde belasting.
+          </div>
+        `;
+      }
+    }
+
+    // --- EVENT LISTENERS VOOR REAL-TIME BEREKENING ---
+    incomeInput.addEventListener('input', calculateTaxes);
+    withheldInput.addEventListener('input', calculateTaxes);
+    taxCreditCheckbox.addEventListener('change', calculateTaxes);
+
+    // --- VOORBEELD SCENARIO'S ---
+    // Scenario 1: Student (vaak belasting terugkrijgen)
+    btnStudent.addEventListener('click', () => {
+      incomeInput.value = 5400; // Bijbaan
+      withheldInput.value = 450; // Werkgever hield wat in (geen korting aangezet of wisselend loon)
+      taxCreditCheckbox.checked = true;
+      calculateTaxes();
+    });
+
+    // Scenario 2: Starter met fulltime baan
+    btnFulltime.addEventListener('click', () => {
+      incomeInput.value = 36000;
+      withheldInput.value = 5200; // Werkgever heeft al netjes loonheffing berekend
+      taxCreditCheckbox.checked = true;
+      calculateTaxes();
+    });
+
+    // Reset knop
+    btnReset.addEventListener('click', () => {
+      incomeInput.value = '';
+      withheldInput.value = '';
+      taxCreditCheckbox.checked = true;
+      calculateTaxes();
+    });
+
+    // Initieel leeg renderen
+    calculateTaxes();
+  </script>
+</body>
+</html>
