@@ -1,0 +1,781 @@
+<div id="seo-roadmap-widget">
+  <style>
+    #seo-roadmap-widget {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #111827;
+      line-height: 1.5;
+      box-sizing: border-box;
+    }
+    #seo-roadmap-widget * {
+      box-sizing: border-box;
+    }
+
+    /* Header & Progress */
+    .srm-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ff4b2b;
+      background: #fff1ee;
+      border: 1px solid #ffd8cf;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .srm-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 0 0 6px;
+      color: #111827;
+      letter-spacing: -0.02em;
+    }
+    .srm-desc {
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 18px;
+    }
+    .srm-progress-panel {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 24px;
+    }
+    .srm-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .srm-progress-track {
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .srm-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #ff7a59, #ff4b2b);
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 999px;
+    }
+
+    /* Tracks / Phases Layout */
+    .srm-tracks {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+    .srm-track-card {
+      background: #ffffff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 16px;
+      transition: border-color 0.15s ease;
+    }
+    .srm-track-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .srm-phase-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6b7280;
+      background: #f3f4f6;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .srm-phase-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+      margin: 0;
+    }
+
+    /* Nodes Grid */
+    .srm-nodes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 10px;
+    }
+    .srm-node {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .srm-node:hover {
+      background: #ffffff;
+      border-color: #9ca3af;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+    .srm-node-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      line-height: 1.3;
+    }
+
+    /* Status indicators */
+    .srm-node[data-status="todo"] .srm-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d1d5db;
+      flex-shrink: 0;
+    }
+    .srm-node[data-status="progress"] {
+      border-color: #ff9d87;
+      background: #fff8f6;
+    }
+    .srm-node[data-status="progress"] .srm-node-title {
+      color: #ff4b2b;
+    }
+    .srm-node[data-status="progress"] .srm-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff4b2b;
+      box-shadow: 0 0 0 3px rgba(255, 75, 43, 0.2);
+      flex-shrink: 0;
+    }
+    .srm-node[data-status="done"] {
+      border-color: #bbf7d0;
+      background: #f0fdf4;
+    }
+    .srm-node[data-status="done"] .srm-node-title {
+      color: #166534;
+    }
+    .srm-node[data-status="done"] .srm-indicator::after {
+      content: "✓";
+      font-size: 11px;
+      font-weight: 800;
+      color: #16a34a;
+    }
+
+    /* Detail Modal / Drawer */
+    .srm-modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.6);
+      z-index: 999999;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      backdrop-filter: blur(3px);
+    }
+    .srm-modal-backdrop.active {
+      display: flex;
+    }
+    .srm-modal {
+      background: #ffffff;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 100%;
+      padding: 22px;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+    .srm-close-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #9ca3af;
+      cursor: pointer;
+    }
+    .srm-close-btn:hover {
+      color: #111827;
+    }
+    .srm-modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin: 0 0 6px;
+      color: #111827;
+    }
+    .srm-modal-summary {
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 14px;
+    }
+    .srm-modal-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #111827;
+      margin: 14px 0 6px;
+    }
+    .srm-modal-why {
+      font-size: 13px;
+      background: #f9fafb;
+      border-left: 3px solid #ff4b2b;
+      padding: 10px 12px;
+      border-radius: 4px;
+      color: #374151;
+      margin-bottom: 14px;
+    }
+    .srm-modal-checks {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px;
+    }
+    .srm-modal-checks li {
+      font-size: 13px;
+      color: #374151;
+      padding: 6px 0;
+      border-bottom: 1px dashed #f3f4f6;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .srm-modal-checks li::before {
+      content: "→";
+      color: #ff4b2b;
+      font-weight: 700;
+    }
+
+    /* Status switch buttons */
+    .srm-status-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #e5e7eb;
+    }
+    .srm-status-btn {
+      padding: 8px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .srm-status-btn:hover {
+      background: #f9fafb;
+    }
+    .srm-status-btn.selected {
+      background: #111827;
+      color: #ffffff;
+      border-color: #111827;
+    }
+
+    /* Footer CTA Banner */
+    .srm-cta-banner {
+      margin-top: 24px;
+      background: #f9fafb;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .srm-cta-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+    .srm-cta-desc {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .srm-cta-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .srm-btn-primary {
+      background: #111827;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 9px 16px;
+      border-radius: 6px;
+      transition: background 0.15s ease;
+      display: inline-block;
+    }
+    .srm-btn-primary:hover {
+      background: #ff4b2b;
+    }
+    .srm-btn-secondary {
+      background: #ffffff;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 9px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .srm-btn-secondary:hover {
+      background: #f3f4f6;
+    }
+  </style>
+
+  <span class="srm-badge">Interactive Roadmap</span>
+  <h2 class="srm-title">SEO & GEO Learning Roadmap</h2>
+  <p class="srm-desc">Klik op een onderwerp voor actiepunten en markeer je voortgang. Opgeslagen in je browser.</p>
+
+  <!-- Progress bar -->
+  <div class="srm-progress-panel">
+    <div class="srm-progress-header">
+      <span>Jouw SEO/GEO Voortgang</span>
+      <span id="srm-progress-text" style="color: #ff4b2b; font-weight: 700;">0 / 15 voltooid (0%)</span>
+    </div>
+    <div class="srm-progress-track">
+      <div class="srm-progress-bar" id="srm-progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- Phases & Nodes Grid -->
+  <div class="srm-tracks" id="srm-tracks-container"></div>
+
+  <!-- Footer CTA -->
+  <div class="srm-cta-banner">
+    <div>
+      <div class="srm-cta-title">Wil je een professionele audit van jouw SEO & GEO structuur?</div>
+      <div class="srm-cta-desc">SEIO analyseert je technische fundament, topic clusters en AI-vindbaarheid.</div>
+    </div>
+    <div class="srm-cta-actions">
+      <a href="mailto:Kelvinlindenburg@gmail.com?subject=SEO%20en%20GEO%20Audit%20Aanvraag" class="srm-btn-primary">Boek een Audit Meeting →</a>
+      <button type="button" class="srm-btn-secondary" id="srm-export-btn">Exporteer Roadmap (.md)</button>
+    </div>
+  </div>
+
+  <!-- Modal Drawer -->
+  <div class="srm-modal-backdrop" id="srm-modal-backdrop">
+    <div class="srm-modal">
+      <button type="button" class="srm-close-btn" id="srm-modal-close">&times;</button>
+      <span class="srm-badge" id="srm-modal-phase" style="font-size: 10px;">Fase</span>
+      <h3 class="srm-modal-title" id="srm-modal-title">Onderwerp</h3>
+      <p class="srm-modal-summary" id="srm-modal-summary">Korte samenvatting...</p>
+
+      <div class="srm-modal-section-title">Waarom dit telt (Praktijkimpact):</div>
+      <div class="srm-modal-why" id="srm-modal-why">Waarom...</div>
+
+      <div class="srm-modal-section-title">3 Concrete Actiepunten / Checks:</div>
+      <ul class="srm-modal-checks" id="srm-modal-checks"></ul>
+
+      <div class="srm-modal-section-title">Status bijwerken:</div>
+      <div class="srm-status-selector">
+        <button type="button" class="srm-status-btn" data-set-status="todo">Nog te leren</button>
+        <button type="button" class="srm-status-btn" data-set-status="progress">Mee bezig</button>
+        <button type="button" class="srm-status-btn" data-set-status="done">Voltooid ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const ROADMAP_DATA = [
+      {
+        phase: "Fase 1",
+        title: "Technische Basis & Crawling",
+        nodes: [
+          {
+            id: "tech_status",
+            title: "HTTP Statuscodes (200, 301, 404)",
+            summary: "Begrijp hoe servers reageren op webcrawlers en browsers.",
+            why: "Verkeerde redirects of 404-loops verspillen crawlbudget en kosten organische posities.",
+            checks: [
+              "Controleer redirect chains en zorg voor directe 301-verwijzingen.",
+              "Creëer een op maat gemaakte, behulpzame 404-pagina.",
+              "Monitor 5xx serverfouten wekelijks in Google Search Console."
+            ]
+          },
+          {
+            id: "tech_robots",
+            title: "Robots.txt & XML Sitemaps",
+            summary: "De verkeersregelaars die bepalen welke URL's crawlers mogen scannen en indexeren.",
+            why: "Een fout in robots.txt kan per ongeluk je complete website uit Google de-indexeren.",
+            checks: [
+              "Verifieer dat je XML sitemap dynamisch update en in Search Console is ingediend.",
+              "Controleer of /wp-admin of test-URL's correct op 'Disallow' staan.",
+              "Zorg dat waardevolle CSS- en JS-bestanden niet worden geblokkeerd."
+            ]
+          },
+          {
+            id: "tech_cwv",
+            title: "Core Web Vitals & Laadsnelheid",
+            summary: "Meetbare statistieken rondom laadsnelheid (LCP), interactiviteit (INP) en visuele stabiliteit (CLS).",
+            why: "Trage pagina's verhogen direct je bounce rate en krijgen een ranking-penalty in mobiele zoekresultaten.",
+            checks: [
+              "Converteer afbeeldingen naar modern WebP/AVIF-formaat.",
+              "Minimaliseer ongebruikte JavaScript en CSS van derden.",
+              "Zorg voor expliciete afmetingen (width/height) op afbeeldingen tegen lay-out shifts."
+            ]
+          }
+        ]
+      },
+      {
+        phase: "Fase 2",
+        title: "Zoekwoorden & Search Intent",
+        nodes: [
+          {
+            id: "kw_research",
+            title: "Keyword Research & Volumes",
+            summary: "Ontdekken waar je doelgroep werkelijk op zoekt qua woordkeuze en zoekvolumes.",
+            why: "Content schrijven zonder zoekvolume-validatie leidt tot pagina's die niemand ooit vindt.",
+            checks: [
+              "Identificeer 1 primair zoekwoord en 3 tot 5 secundaire semantische varianten.",
+              "Kijk naar de trend (stijgend of dalend volume) in plaats van alleen gemiddelden.",
+              "Breng 'Zero Volume' zoekwoorden in kaart die specifieke B2B koopvragen beantwoorden."
+            ]
+          },
+          {
+            id: "kw_intent",
+            title: "Zoekintentie Categorisering",
+            summary: "Onderscheid maken tussen Informationeel, Commercieel, Transactioneel en Navigationeel.",
+            why: "Als een zoeker een vergelijking wil en jij toont direct een betaalpagina, rank je nooit op positie 1.",
+            checks: [
+              "Google het zoekwoord handmatig en analyseer het type pagina dat nu rankt.",
+              "Stem het paginatype (blog, landingspagina, tool of product) 1-op-1 af op de intentie.",
+              "Formuleer een duidelijke 'Next Step' CTA die logisch volgt op de intentiefase."
+            ]
+          },
+          {
+            id: "kw_serp",
+            title: "SERP & Concurrentie Analyse",
+            summary: "Grondig de top 5 zoekresultaten deconstrueren op contentdiepte en formats.",
+            why: "Je wint alleen organisch marktaandeel als jouw pagina aantoonbaar waardevoller is dan de top 3.",
+            checks: [
+              "Bekijk welke 'Mensen vragen ook' (PAA) boxen Google toont.",
+              "Analyseer de headings (H2/H3) structuur van je top 3 concurrenten.",
+              "Zoek de ontbrekende invalshoek ('Information Gain') die de concurrentie overslaat."
+            ]
+          }
+        ]
+      },
+      {
+        phase: "Fase 3",
+        title: "On-Page & Content Structuur",
+        nodes: [
+          {
+            id: "onpage_clusters",
+            title: "Topic Clusters & Pillar Pages",
+            summary: "Een thematische contenthub met een overkoepelende hoofdpagina en diepere sub-artikelen.",
+            why: "Google beloont topical authority: clusters bewijzen dat je een autoriteit bent over het gehele vakgebied.",
+            checks: [
+              "Wijs 1 centrale Pillar Page aan voor je hoofdexpertise.",
+              "Schrijf minimaal 4 ondersteunende clusterartikelen rondom subthema's.",
+              "Verbind alle sub-artikelen bidirectioneel met de centrale Pillar Page."
+            ]
+          },
+          {
+            id: "onpage_linking",
+            title: "Interne Linkstructuur & Ankers",
+            summary: "Het strategisch doorkoppelen van relevante pagina's binnen je eigen domein.",
+            why: "Interne links verdelen 'link equity' (autoriteit) en helpen bots de hiërarchie te begrijpen.",
+            checks: [
+              "Gebruik beschrijvende ankerteksten in plaats van 'klik hier'.",
+              "Verwijder 'weespagina's' (pagina's waar geen enkele interne link naartoe wijst).",
+              "Link vanuit populaire, goedbezochte pagina's door naar nieuwe artikelen."
+            ]
+          },
+          {
+            id: "onpage_meta",
+            title: "Titels, H-Tags & Snippet CTR",
+            summary: "Optimalisatie van de Title Tag, Meta Description en hiërarchische koppenstructuur.",
+            why: "Een hoge click-through rate (CTR) in de zoekresultaten is een direct positief gebruikerssignaal.",
+            checks: [
+              "Houd title tags onder de 60 tekens en plaats het kernzoekwoord vooraan.",
+              "Zorg per pagina voor exact één H1 die de kernboodschap samenvat.",
+              "Schrijf actiegerichte meta-descriptions met een duidelijke belofte of cijfer."
+            ]
+          }
+        ]
+      },
+      {
+        phase: "Fase 4",
+        title: "GEO & AI Search (2026 Ready)",
+        nodes: [
+          {
+            id: "geo_schema",
+            title: "Structured Data (Schema.org / JSON-LD)",
+            summary: "Machine-leesbare code die zoekmachines context geeft over je organisatie, auteurs en data.",
+            why: "Essentieel voor rich snippets in Google én voor AI-modellen om je content accuraat te parseren.",
+            checks: [
+              "Implementeer Organization, Article en FAQPage schema via JSON-LD.",
+              "Valideer je gestructureerde data via de Google Rich Results Test.",
+              "Koppel SameAs social profielen en auteursprofielen voor maximale entiteit-herkenning."
+            ]
+          },
+          {
+            id: "geo_citations",
+            title: "Optimalisatie voor AI Citations (LLM's)",
+            summary: "Content schrijven zodat ChatGPT, Perplexity en AI Overviews jou als primaire bron citeren.",
+            why: "Traditionele clicks nemen af; geciteerd worden in AI-antwoorden is het nieuwe organische verkeer.",
+            checks: [
+              "Plaats compacte, feitelijke definities (30-50 woorden) direct onder de H2.",
+              "Gebruik duidelijke datatabellen, bullets en unieke originele statistieken.",
+              "Zorg dat je merk genoemd wordt op gezaghebbende externe bronnen binnen je niche."
+            ]
+          },
+          {
+            id: "geo_eeat",
+            title: "E-E-A-T & Auteursentiteiten",
+            summary: "Ervaring, Expertise, Autoriteit en Betrouwbaarheid aantonen op persoonsniveau.",
+            why: "AI zoekt naar bewijs van echte menselijke praktijkervaring in plaats van generieke teksten.",
+            checks: [
+              "Voeg duidelijke auteur-bio's toe met relevante werkervaring en LinkedIn-links.",
+              "Voeg 'first-hand experience' toe (eigen screenshots, praktijkvoorbeelden, meetresultaten).",
+              "Zorg voor een transparante 'Over Ons' pagina met contactgegevens en KVK-vermelding."
+            ]
+          }
+        ]
+      },
+      {
+        phase: "Fase 5",
+        title: "Autoriteit & Monitoring",
+        nodes: [
+          {
+            id: "auth_links",
+            title: "Backlink Fundamentals & Digital PR",
+            summary: "Kwalitatieve externe links verzamelen vanaf relevante, betrouwbare websites.",
+            why: "Backlinks blijven een van de zwaarst wegende rankingfactoren voor domeinautoriteit.",
+            checks: [
+              "Focus op relevante branche-links boven bulk linkdirectories.",
+              "Creëer linkbare assets (eigen reken-tools, templates of branche-onderzoeken).",
+              "Monitor verloren backlinks en herstel 404-pagina's met bestaande inkomende links."
+            ]
+          },
+          {
+            id: "auth_gsc",
+            title: "Google Search Console Data-Analyse",
+            summary: "Monitoren van vertoningen, zoektermen, CTR en indexeringsproblemen.",
+            why: "GSC toont de enige 100% betrouwbare first-party zoekdata direct afkomstig van Google.",
+            checks: [
+              "Filter op pagina's met veel vertoningen maar lage CTR (herzie title/meta).",
+              "Identificeer 'striking distance' zoekwoorden op posities 8 t/m 15 voor snelle winst.",
+              "Inspecteer maandelijks de 'Gecrawld - momenteel niet geïndexeerd' rapportages."
+            ]
+          },
+          {
+            id: "auth_tracking",
+            title: "Rank Tracking & Content Verval Audit",
+            summary: "Periodiek meten van posities en oudere artikelen up-to-date houden.",
+            why: "Rankings vervallen natuurlijk over tijd als concurrenten nieuwere content publiceren.",
+            checks: [
+              "Voer elk kwartaal een 'content refresh' uit op je top 20 belangrijkste pagina's.",
+              "Monitor zoekposities wekelijks op je commerciële kernzoekwoorden.",
+              "Stel alerts in voor plotselinge dalingen van meer dan 3 posities."
+            ]
+          }
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = "seio_seo_roadmap_progress";
+    const root = document.getElementById("seo-roadmap-widget");
+    if (!root) return;
+
+    let progressState = {};
+    try {
+      progressState = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+    } catch (e) {
+      progressState = {};
+    }
+
+    const container = root.querySelector("#srm-tracks-container");
+    const progressFill = root.querySelector("#srm-progress-fill");
+    const progressText = root.querySelector("#srm-progress-text");
+    const modalBackdrop = root.querySelector("#srm-modal-backdrop");
+    const modalClose = root.querySelector("#srm-modal-close");
+    const exportBtn = root.querySelector("#srm-export-btn");
+
+    let activeNodeId = null;
+
+    function getAllNodes() {
+      const list = [];
+      ROADMAP_DATA.forEach(track => {
+        track.nodes.forEach(n => list.push({ ...n, phase: track.phase }));
+      });
+      return list;
+    }
+
+    function updateProgress() {
+      const all = getAllNodes();
+      let doneCount = 0;
+      all.forEach(n => {
+        if (progressState[n.id] === "done") doneCount++;
+      });
+      const pct = Math.round((doneCount / all.length) * 100);
+      progressFill.style.width = pct + "%";
+      progressText.textContent = doneCount + " / " + all.length + " voltooid (" + pct + "%)";
+    }
+
+    function renderRoadmap() {
+      container.innerHTML = "";
+      ROADMAP_DATA.forEach(track => {
+        const card = document.createElement("div");
+        card.className = "srm-track-card";
+
+        let nodesHtml = "";
+        track.nodes.forEach(node => {
+          const status = progressState[node.id] || "todo";
+          nodesHtml += `
+            <div class="srm-node" data-node-id="${node.id}" data-status="${status}">
+              <span class="srm-node-title">${node.title}</span>
+              <span class="srm-indicator"></span>
+            </div>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="srm-track-header">
+            <span class="srm-phase-tag">${track.phase}</span>
+            <h4 class="srm-phase-title">${track.title}</h4>
+          </div>
+          <div class="srm-nodes-grid">${nodesHtml}</div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      // Bind node clicks
+      container.querySelectorAll(".srm-node").forEach(el => {
+        el.addEventListener("click", function () {
+          const id = this.getAttribute("data-node-id");
+          openModal(id);
+        });
+      });
+
+      updateProgress();
+    }
+
+    function openModal(nodeId) {
+      activeNodeId = nodeId;
+      const all = getAllNodes();
+      const node = all.find(n => n.id === nodeId);
+      if (!node) return;
+
+      root.querySelector("#srm-modal-phase").textContent = node.phase;
+      root.querySelector("#srm-modal-title").textContent = node.title;
+      root.querySelector("#srm-modal-summary").textContent = node.summary;
+      root.querySelector("#srm-modal-why").textContent = node.why;
+
+      const checksEl = root.querySelector("#srm-modal-checks");
+      checksEl.innerHTML = "";
+      node.checks.forEach(c => {
+        const li = document.createElement("li");
+        li.textContent = c;
+        checksEl.appendChild(li);
+      });
+
+      // Update active status button
+      const currentStatus = progressState[nodeId] || "todo";
+      root.querySelectorAll(".srm-status-btn").forEach(btn => {
+        if (btn.getAttribute("data-set-status") === currentStatus) {
+          btn.classList.add("selected");
+        } else {
+          btn.classList.remove("selected");
+        }
+      });
+
+      modalBackdrop.classList.add("active");
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove("active");
+      activeNodeId = null;
+    }
+
+    // Status change listener inside modal
+    root.querySelectorAll(".srm-status-btn").forEach(btn => {
+      btn.addEventListener("click", function () {
+        if (!activeNodeId) return;
+        const newStatus = this.getAttribute("data-set-status");
+        progressState[activeNodeId] = newStatus;
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(progressState));
+        } catch (e) {}
+
+        root.querySelectorAll(".srm-status-btn").forEach(b => b.classList.remove("selected"));
+        this.classList.add("selected");
+
+        // Update corresponding node in DOM
+        const domNode = container.querySelector(`[data-node-id="${activeNodeId}"]`);
+        if (domNode) domNode.setAttribute("data-status", newStatus);
+
+        updateProgress();
+      });
+    });
+
+    modalClose.addEventListener("click", closeModal);
+    modalBackdrop.addEventListener("click", function (e) {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    // Export Roadmap as Markdown
+    exportBtn.addEventListener("click", function () {
+      let md = `# SEO & GEO Learning Roadmap (SEIO Blueprint)\n\n`;
+      const all = getAllNodes();
+      let done = 0;
+      all.forEach(n => { if (progressState[n.id] === "done") done++; });
+      md += `Voortgang: ${done} / ${all.length} onderwerpen afgerond (${Math.round((done / all.length) * 100)}%)\n\n---\n\n`;
+
+      ROADMAP_DATA.forEach(track => {
+        md += `## ${track.phase}: ${track.title}\n`;
+        track.nodes.forEach(n => {
+          const st = progressState[n.id] || "todo";
+          const icon = st === "done" ? "[x]" : (st === "progress" ? "[-]" : "[ ]");
+          md += `\n### ${icon} ${n.title}\n`;
+          md += `- Samenvatting: ${n.summary}\n`;
+          md += `- Waarom dit telt: ${n.why}\n`;
+          md += `- Actiepunten:\n`;
+          n.checks.forEach(c => { md += `  - ${c}\n`; });
+        });
+        md += `\n---\n`;
+      });
+
+      md += `\nProfessionele SEO/GEO ondersteuning nodig? Plan een sessie via Kelvinlindenburg@gmail.com\n`;
+
+      const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "SEO-GEO-Learning-Roadmap.md";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+
+    // Init
+    renderRoadmap();
+  })();
+</script>
