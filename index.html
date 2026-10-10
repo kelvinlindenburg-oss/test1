@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Marketing Agency Snippets Sandbox</title>
-  
+
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -32,7 +32,6 @@
       color: #6b7280;
       font-size: 14px;
     }
-    /* Vaste global features */
     #scroll-progress {
       position: fixed; top: 0; left: 0; height: 5px;
       background: linear-gradient(90deg, #ff416c, #ff4b2b);
@@ -55,14 +54,11 @@
     <h1>Marketing Agency Snippets Sandbox</h1>
     <p>Hieronder worden je actieve snippets automatisch ingeladen:</p>
 
-    <!-- ============================================== -->
-    <!-- DE SNIPPET SLOTS: Hier pluggen we tools in!   -->
-    <!-- ============================================== -->
+    <!-- DE SNIPPET SLOT -->
     <div id="slot-calculator" class="card" data-snippet="snippets/calculator.html">
       <p style="color: #9ca3af; font-size: 13px;">Snippet laden...</p>
     </div>
 
-    <!-- Vaste testkaartjes -->
     <div class="card">
       <h3>Test: Reading Progress Bar</h3>
       <p>Scrol omlaag om de balk bovenaan te testen.</p>
@@ -76,7 +72,6 @@
   </footer>
 
   <script>
-    // Vaste algemene functies (jaar + scroll)
     document.addEventListener("DOMContentLoaded", function () {
       const year = document.getElementById("current-year");
       if (year) year.textContent = new Date().getFullYear();
@@ -91,17 +86,16 @@
       });
       if (topBtn) topBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 
-      // DE MAGIE: Laad automatisch alle bestanden in uit data-snippet
+      // Snippet Fetcher
       document.querySelectorAll("[data-snippet]").forEach(function (slot) {
         const file = slot.getAttribute("data-snippet");
         fetch(file)
           .then(res => {
-            if (!res.ok) throw new Error("Bestand niet gevonden");
+            if (!res.ok) throw new Error("HTTP " + res.status + " bij laden van " + file);
             return res.text();
           })
           .then(html => {
             slot.innerHTML = html;
-            // Voer eventuele <script> tags uit die in het snippet-bestandje zitten
             slot.querySelectorAll("script").forEach(oldScript => {
               const newScript = document.createElement("script");
               Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
@@ -110,7 +104,8 @@
             });
           })
           .catch(err => {
-            slot.innerHTML = `<p style="color: #ef4444; font-size: 13px;">Kan <code>${file}</code> niet inladen. Controleer of het bestand bestaat op GitHub.</p>`;
+            console.error("Fetch fout:", err);
+            slot.innerHTML = `<p style="color: #ef4444; font-size: 13px;">Fout bij inladen van <code>${file}</code>. Check de console (F12) voor details.</p>`;
           });
       });
     });
