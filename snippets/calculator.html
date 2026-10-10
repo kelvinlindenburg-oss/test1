@@ -1,56 +1,184 @@
-<div class="calc-inner" id="calc-wrapper">
-  <span style="display: inline-block; font-size: 11px; font-weight: 700; color: #ff4b2b; background: #fff1ee; padding: 2px 8px; border-radius: 20px;">ROI TOOL</span>
-  <h2 style="margin: 8px 0 6px; font-size: 18px;">Workflow Tijdwinst Calculator</h2>
-  <p style="font-size: 13px; color: #4b5563; margin-bottom: 16px;">Bereken hoeveel tijd verloren gaat aan onboarding en basistools.</p>
-
-  <div style="margin-bottom: 14px;">
-    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
-      <span>Teamgrootte:</span>
-      <span id="c-team-val" style="color: #ff4b2b;">5 personen</span>
-    </div>
-    <input type="range" id="c-team" min="1" max="25" value="5" style="width: 100%; accent-color: #ff4b2b;">
-  </div>
-
-  <div style="margin-bottom: 14px;">
-    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
-      <span>Uren per week kwijt aan uitleg/onboarding:</span>
-      <span id="c-hours-val" style="color: #ff4b2b;">3 uur</span>
-    </div>
-    <input type="range" id="c-hours" min="1" max="10" value="3" style="width: 100%; accent-color: #ff4b2b;">
-  </div>
-
-  <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px; margin-top: 14px;">
-    <div id="c-result" style="font-size: 15px; font-weight: 700; color: #111827;"></div>
-    <a href="mailto:Kelvinlindenburg@gmail.com?subject=Workflow%20Calculator" style="display: inline-block; background: #111827; color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 12px; margin-top: 10px; font-weight: 600;">Plan een intake</a>
-  </div>
-</div>
-
-<script>
-  (function () {
-    const root = document.getElementById("calc-wrapper");
-    if (!root) return;
-
-    const tInput = root.querySelector("#c-team");
-    const hInput = root.querySelector("#c-hours");
-    const tVal = root.querySelector("#c-team-val");
-    const hVal = root.querySelector("#c-hours-val");
-    const res = root.querySelector("#c-result");
-
-    function update() {
-      const team = parseInt(tInput.value, 10);
-      const hours = parseInt(hInput.value, 10);
-      tVal.textContent = team + (team === 1 ? " persoon" : " personen");
-      hVal.textContent = hours + " uur";
-
-      const totalHours = team * hours;
-      // 70% tijdwinst tegen €45/uur * 4.33 weken per maand
-      const euroSaved = Math.round((totalHours * 0.7) * 45 * 4.33);
-
-      res.innerHTML = "Je team verliest <span style='color: #dc2626;'>" + totalHours + " uur per week</span>; een geautomatiseerde hub bespaart <span style='color: #059669;'>€ " + euroSaved.toLocaleString("nl-NL") + " per maand</span>.";
+<div class="repetitive-calc-wrap" id="seio-rep-calc">
+  <style>
+    #seio-rep-calc {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #111827;
+      line-height: 1.5;
     }
 
-    tInput.addEventListener("input", update);
-    hInput.addEventListener("input", update);
-    update();
-  })();
-</script>
+    #seio-rep-calc * {
+      box-sizing: border-box;
+    }
+
+    .rc-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ff4b2b;
+      background: #fff1ee;
+      border: 1px solid #ffd8cf;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .rc-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 6px 0;
+      color: #111827;
+    }
+
+    .rc-subtitle {
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 20px;
+    }
+
+    .rc-grid-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .rc-grid-inputs {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .rc-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .rc-input-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .rc-input-prefix {
+      position: absolute;
+      left: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #6b7280;
+      pointer-events: none;
+    }
+
+    .rc-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #111827;
+      outline: none;
+      transition: border-color 0.15s ease;
+      background: #fff;
+    }
+
+    .rc-input.has-prefix {
+      padding-left: 28px;
+    }
+
+    .rc-input:focus {
+      border-color: #ff4b2b;
+      box-shadow: 0 0 0 3px rgba(255, 75, 43, 0.1);
+    }
+
+    .rc-help-text {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    /* Slider sectie */
+    .rc-slider-box {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 22px;
+    }
+
+    .rc-slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .rc-slider-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .rc-slider-val {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ff4b2b;
+      background: #fff1ee;
+      padding: 3px 10px;
+      border-radius: 6px;
+      border: 1px solid #ffd8cf;
+    }
+
+    .rc-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #e5e7eb;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      margin: 10px 0 12px;
+    }
+
+    .rc-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ff4b2b;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(255, 75, 43, 0.4);
+      transition: transform 0.1s ease;
+    }
+
+    .rc-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .rc-explainer {
+      font-size: 12px;
+      color: #4b5563;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-left: 3px solid #ff4b2b;
+      border-radius: 6px;
+      padding: 10px 12px;
+      line-height: 1.45;
+    }
+
+    /* Resultaten Dashboard */
+    .rc-results-card {
+      background: #ffffff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .rc-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(
