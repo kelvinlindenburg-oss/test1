@@ -1,7 +1,7 @@
 <div class="repetitive-calc-wrap" id="seio-rep-calc">
   <style>
     #seio-rep-calc {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: inherit;
       color: #111827;
       line-height: 1.5;
     }
@@ -181,9 +181,15 @@
 
     .rc-metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
       margin-bottom: 16px;
+    }
+
+    @media (max-width: 500px) {
+      .rc-metrics-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .rc-metric {
@@ -203,9 +209,8 @@
     }
 
     .rc-metric-val {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 800;
-      color: #111827;
     }
 
     .rc-metric-val.danger {
@@ -230,7 +235,7 @@
     }
 
     .rc-saving-hero {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
       color: #166534;
       margin-bottom: 4px;
@@ -262,7 +267,6 @@
       cursor: pointer;
       transition: all 0.15s ease;
       text-align: center;
-      width: auto;
     }
 
     .rc-btn-primary:hover {
@@ -366,7 +370,7 @@
     <input type="range" id="rc-minutes-slider" class="rc-slider" min="15" max="180" step="5" value="60" />
 
     <div class="rc-explainer">
-      💡 <em>Repetitieve taken lijken vaak maar een paar minuten te kosten, maar opgeteld kunnen ze dagelijks behoorlijk wat tijd in beslag nemen. Denk aan het beantwoorden van e-mails, het zoeken naar informatie, het bijwerken van documenten en het plannen van taken. Door deze kleine handelingen stapelen de verloren minuten zich op, waardoor je uiteindelijk veel tijd kwijt bent aan organiseren in plaats van aan je belangrijkste werkzaamheden.</em>
+      💡 <em>Repetitieve taken lijken vaak maar een paar minuten te kosten, maar opgeteld kunnen ze dagelijks behoorlijk wat tijd in beslag nemen. Denk aan het beantwoorden van e-mails, het zoeken naar informatie, het bijwerken van documenten en het plannen van taken. Door deze kleine handelingen gedurende de dag stapelen de verloren minuten zich op, waardoor je uiteindelijk veel tijd kwijt bent aan organiseren in plaats van aan je belangrijkste werkzaamheden.</em>
     </div>
   </div>
 
@@ -379,29 +383,24 @@
         <div style="font-size: 11px; color: #6b7280; margin-top: 2px;" id="rc-lost-hours-month">0 uur / maand</div>
       </div>
       <div class="rc-metric">
-        <div class="rc-metric-label">Verloren kosten / mnd</div>
-        <div class="rc-metric-val danger" id="rc-lost-cost-month">€ 0</div>
+        <div class="rc-metric-label">Verloren kosten</div>
+        <div class="rc-metric-val danger" id="rc-lost-cost-month">€ 0 / maand</div>
         <div style="font-size: 11px; color: #6b7280; margin-top: 2px;" id="rc-lost-cost-year">€ 0 / jaar</div>
-      </div>
-      <div class="rc-metric">
-        <div class="rc-metric-label">Besparingspotentieel</div>
-        <div class="rc-metric-val" id="rc-pct-display" style="color: #ff4b2b;">10% - 15%</div>
-        <div style="font-size: 11px; color: #6b7280; margin-top: 2px;">op basis van repetitiviteit</div>
       </div>
     </div>
 
-    <!-- Nettobesparing Hub -->
+    <!-- Nettobesparing Hub (Vast 5% tot 20%) -->
     <div class="rc-saving-banner">
-      <div class="rc-saving-title">Verwachte Nettobesparing met een Centrale Hub</div>
+      <div class="rc-saving-title">Verwachte Nettobesparing met een Centrale Hub (5% - 20%)</div>
       <div class="rc-saving-hero" id="rc-saving-hero">€ 0 - € 0 / maand</div>
       <div class="rc-saving-desc" id="rc-saving-year-desc">
-        Goed voor een jaarlijkse herwonnen capaciteit en budget van circa <strong>€ 0</strong>.
+        Een centrale hub bespaart <strong>5% tot 20%</strong> per werknemer, goed voor een jaarlijkse nettobesparing van <strong>€ 0 - € 0</strong> over je team.
       </div>
     </div>
 
     <!-- CTA Trigger -->
     <div class="rc-cta-container">
-      <span style="font-size: 12px; color: #6b7280;">Berekend op 154 werkbare uren per maand per fte.</span>
+      <span style="font-size: 12px; color: #6b7280;">Berekend op 154 werkbare uren per maand per medewerker.</span>
       <button type="button" class="rc-btn-primary" id="rc-open-intake-btn">Plan een intake →</button>
     </div>
   </div>
@@ -412,16 +411,15 @@
       <button type="button" class="rc-modal-close" id="rc-close-intake-btn">&times;</button>
       <span class="rc-badge" style="font-size: 10px;">SEIO Workflow Audit</span>
       <h3 style="font-size: 18px; margin: 4px 0 6px 0;">Plan je Intake & Besparingsgesprek</h3>
-      <p style="font-size: 13px; color: #4b5563; margin-bottom: 12px;">We nemen je berekende gegevens mee om een gerichte roadmap voor jouw team op te stellen.</p>
+      <p style="font-size: 13px; color: #4b5563; margin-bottom: 12px;">We nemen je berekende gegevens direct mee naar de intake.</p>
 
-      <!-- Automatische Samenvatting van de inputs -->
       <div class="rc-summary-box" id="rc-modal-summary">
         Gegevens worden klaargezet...
       </div>
 
       <form id="rc-intake-form">
         <div style="margin-bottom: 12px;">
-          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Naam *</label>
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Naam / Bedrijf *</label>
           <input type="text" id="rc-lead-name" class="rc-input" required placeholder="Je naam of bedrijfsnaam" />
         </div>
         <div style="margin-bottom: 12px;">
@@ -429,11 +427,11 @@
           <input type="email" id="rc-lead-email" class="rc-input" required placeholder="naam@bedrijf.nl" />
         </div>
         <div style="margin-bottom: 16px;">
-          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Aanvullende toelichting / specifieke tools (optioneel)</label>
-          <textarea id="rc-lead-notes" class="rc-input" rows="3" placeholder="Bijv: We gebruiken nu Slack, Asana en losse documenten..."></textarea>
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Huidige tools of toelichting (optioneel)</label>
+          <textarea id="rc-lead-notes" class="rc-input" rows="3" placeholder="Bijv: We lopen vast in losse Google Docs, Slack en mail..."></textarea>
         </div>
 
-        <button type="submit" class="rc-btn-primary" style="width: 100%;">Bevestig & Verstuur Intake-uitnodiging</button>
+        <button type="submit" class="rc-btn-primary" style="width: 100%;">Bevestig & Open E-mail Uitnodiging</button>
       </form>
     </div>
   </div>
@@ -455,7 +453,6 @@
     const lostHoursMonth = root.querySelector("#rc-lost-hours-month");
     const lostCostMonth = root.querySelector("#rc-lost-cost-month");
     const lostCostYear = root.querySelector("#rc-lost-cost-year");
-    const pctDisplay = root.querySelector("#rc-pct-display");
     const savingHero = root.querySelector("#rc-saving-hero");
     const savingYearDesc = root.querySelector("#rc-saving-year-desc");
 
@@ -479,45 +476,35 @@
 
       minDisplay.textContent = minutesPerDay + " min / dag";
 
-      // Aannames standaard werkbaar:
-      // 5 werkdagen per week, gem. 21,7 werkdagen per maand, 154 uur per maand (ca. 7,1 uur/dag)
+      // 154 werkbare uren per maand per fte, 21.7 werkdagen per maand
       const workDaysPerMonth = 21.7;
       const workHoursPerMonth = 154;
       const hourlyRateEmp = costPerEmployee / workHoursPerMonth;
 
       // Verloren uren
       const lostHoursPerPersonPerDay = minutesPerDay / 60;
-      const lostHoursPerPersonPerWeek = lostHoursPerPersonPerDay * 5;
-      const lostHoursTeamPerWeek = lostHoursPerPersonPerWeek * teamSize;
+      const lostHoursTeamPerWeek = lostHoursPerPersonPerDay * 5 * teamSize;
       const lostHoursTeamPerMonth = lostHoursPerPersonPerDay * workDaysPerMonth * teamSize;
 
-      // Totale verloren werkgeverskosten aan repetitief werk
+      // Verloren kosten
       const totalLostCostMonth = lostHoursTeamPerMonth * hourlyRateEmp;
       const totalLostCostYear = totalLostCostMonth * 12;
 
-      // Realistisch besparingspercentage: 5% tot 20%
-      // Schalen op basis van minuten (15 min = 5% tot 10%; 180 min = 15% tot 20%)
-      const sliderRatio = (minutesPerDay - 15) / (180 - 15); // 0.0 tot 1.0
-      const minPct = 5 + (sliderRatio * 10);  // schaalt tussen 5% en 15%
-      const maxPct = 10 + (sliderRatio * 10); // schaalt tussen 10% en 20%
-
-      pctDisplay.textContent = Math.round(minPct) + "% - " + Math.round(maxPct) + "%";
-
-      // Verwachte netto-besparing
-      const netSavingsMonthMin = totalLostCostMonth * (minPct / 100);
-      const netSavingsMonthMax = totalLostCostMonth * (maxPct / 100);
-      const netSavingsYearAvg = ((netSavingsMonthMin + netSavingsMonthMax) / 2) * 12;
+      // VASTE BESPARING: Altijd 5% tot 20%
+      const netSavingsMonthMin = totalLostCostMonth * 0.05;
+      const netSavingsMonthMax = totalLostCostMonth * 0.20;
+      const netSavingsYearMin = totalLostCostYear * 0.05;
+      const netSavingsYearMax = totalLostCostYear * 0.20;
 
       // Renderen
       lostHoursWeek.textContent = Math.round(lostHoursTeamPerWeek) + " uur / week";
       lostHoursMonth.textContent = "~" + Math.round(lostHoursTeamPerMonth) + " uur / maand over team";
-      lostCostMonth.textContent = formatEuro(totalLostCostMonth);
+      lostCostMonth.textContent = formatEuro(totalLostCostMonth) + " / mnd";
       lostCostYear.textContent = formatEuro(totalLostCostYear) + " / jaar";
 
-      savingHero.textContent = formatEuro(netSavingsMonthMin) + " - " + formatEuro(netSavingsMonthMax) + " / mnd";
-      savingYearDesc.innerHTML = "Goed voor een geschatte jaarlijkse nettobesparing van circa <strong>" + formatEuro(netSavingsYearAvg) + "</strong> en <strong>" + Math.round((lostHoursTeamPerMonth * ((minPct + maxPct) / 200)) * 12) + " herwonnen focus-uren</strong>.";
+      savingHero.textContent = formatEuro(netSavingsMonthMin) + " - " + formatEuro(netSavingsMonthMax) + " / maand";
+      savingYearDesc.innerHTML = "Een centrale hub bespaart <strong>5% tot 20%</strong> per medewerker, goed voor een jaarlijkse nettobesparing van <strong>" + formatEuro(netSavingsYearMin) + " tot " + formatEuro(netSavingsYearMax) + "</strong> over je team.";
 
-      // Gegevens opslaan voor formulier
       currentStats = {
         teamSize: teamSize,
         costPerEmp: costPerEmployee,
@@ -525,22 +512,22 @@
         lostHoursTeamWeek: Math.round(lostHoursTeamPerWeek),
         lostCostYear: formatEuro(totalLostCostYear),
         savingRangeMonth: formatEuro(netSavingsMonthMin) + " - " + formatEuro(netSavingsMonthMax),
-        savingYearAvg: formatEuro(netSavingsYearAvg)
+        savingRangeYear: formatEuro(netSavingsYearMin) + " - " + formatEuro(netSavingsYearMax)
       };
     }
 
-    // Event listeners inputs
+    // Input listeners
     costEmpInput.addEventListener("input", calculate);
     teamSizeInput.addEventListener("input", calculate);
     minSlider.addEventListener("input", calculate);
 
-    // Modal openen & invullen
+    // Modal interacties
     openIntakeBtn.addEventListener("click", function () {
       modalSummary.innerHTML = `
-        <strong>Jouw calculator audit:</strong><br>
+        <strong>Jouw berekende situatie:</strong><br>
         • Teamgrootte: <b>${currentStats.teamSize} medewerkers</b> (€ ${currentStats.costPerEmp}/mnd gem.)<br>
-        • Repetitieve frictie: <b>${currentStats.minutes} min / dag</b> (~${currentStats.lostHoursTeamWeek} uur/week teamverlies)<br>
-        • Potentiële nettobesparing: <b>${currentStats.savingRangeMonth} per maand</b> (~${currentStats.savingYearAvg}/jaar)
+        • Repetitieve taken: <b>${currentStats.minutes} min / dag</b> (~${currentStats.lostHoursTeamWeek} uur/week teamverlies)<br>
+        • Verwachte nettobesparing (5% - 20%): <b>${currentStats.savingRangeMonth} per maand</b> (${currentStats.savingRangeYear}/jaar)
       `;
       modal.classList.add("is-active");
     });
@@ -553,36 +540,33 @@
       if (e.target === modal) modal.classList.remove("is-active");
     });
 
-    // Form submit -> mailto met alle data voorbereid
     intakeForm.addEventListener("submit", function (e) {
       e.preventDefault();
       const name = root.querySelector("#rc-lead-name").value;
       const email = root.querySelector("#rc-lead-email").value;
       const notes = root.querySelector("#rc-lead-notes").value;
 
-      const subject = encodeURIComponent("Aanvraag SEIO Intake & Besparingsaudit - " + name);
+      const subject = encodeURIComponent("Aanvraag SEIO Intake & Besparingsgesprek - " + name);
       const body = encodeURIComponent(
         "Hallo Kelvin,\n\n" +
         "Hierbij vraag ik een intake aan op basis van de Workflow Calculator:\n\n" +
-        "--- CALCULATOR GEGEVENS ---\n" +
-        "• Bedrijfsnaam/Contact: " + name + " (" + email + ")\n" +
+        "--- BEREKENING ---\n" +
+        "• Naam/Bedrijf: " + name + " (" + email + ")\n" +
         "• Teamgrootte: " + currentStats.teamSize + " medewerkers\n" +
         "• Gemiddelde werkgeverskost: € " + currentStats.costPerEmp + " / maand per fte\n" +
         "• Repetitieve taken per persoon: " + currentStats.minutes + " min / dag\n" +
-        "• Verloren uren team: " + currentStats.lostHoursTeamWeek + " uur per week\n" +
-        "• Geschat verloren loonbedrag: " + currentStats.lostCostYear + " per jaar\n" +
-        "• Berekende nettobesparing hub: " + currentStats.savingRangeMonth + " per maand\n\n" +
+        "• Verloren uren team: " + currentStats.lostHoursTeamWeek + " uur / week\n" +
+        "• Geschat verloren loonbedrag: " + currentStats.lostCostYear + " / jaar\n" +
+        "• Berekende nettobesparing hub (5% - 20%): " + currentStats.savingRangeMonth + " / maand (" + currentStats.savingRangeYear + " / jaar)\n\n" +
         "--- TOELICHTING / TOOLS ---\n" +
         (notes ? notes : "Geen extra toelichting") + "\n\n" +
-        "Graag plan ik een korte sessie om de Notion architectuur en roadmap door te nemen."
+        "Graag plan ik een meeting om de mogelijkheden door te nemen."
       );
 
-      // Open mail client met kant-en-klare data
       window.location.href = "mailto:Kelvinlindenburg@gmail.com?subject=" + subject + "&body=" + body;
       modal.classList.remove("is-active");
     });
 
-    // Start direct met berekening
     calculate();
   })();
 </script>
