@@ -1,0 +1,72 @@
+<div class="calculator-card">
+  <h2>Compound Interest Calculator</h2>
+  
+  <label for="principal">Initial Deposit ($):</label>
+  <input type="number" id="principal" value="10000" min="0" step="100">
+
+  <label for="monthly-contrib">Monthly Contribution ($):</label>
+  <input type="number" id="monthly-contrib" value="200" min="0" step="25">
+
+  <label for="rate">Annual Interest Rate (%):</label>
+  <input type="number" id="rate" value="7" min="0" step="0.1">
+
+  <label for="years">Investment Horizon (Years):</label>
+  <input type="number" id="years" value="10" min="1" max="50">
+
+  <label for="frequency">Compounding Frequency:</label>
+  <select id="frequency">
+    <option value="1">Annually</option>
+    <option value="4">Quarterly</option>
+    <option value="12" selected>Monthly</option>
+    <option value="365">Daily</option>
+  </select>
+
+  <button id="calc-btn">Calculate Growth</button>
+
+  <div class="results" id="output">
+    <!-- Populated by JavaScript -->
+  </div>
+</div>
+
+<script>
+  function computeCompoundInterest() {
+    const P = parseFloat(document.getElementById('principal').value) || 0;
+    const monthlyPMT = parseFloat(document.getElementById('monthly-contrib').value) || 0;
+    const annualRate = (parseFloat(document.getElementById('rate').value) || 0) / 100;
+    const t = parseFloat(document.getElementById('years').value) || 0;
+    const n = parseInt(document.getElementById('frequency').value, 10) || 12;
+
+    const ratePerPeriod = annualRate / n;
+    const totalPeriods = n * t;
+
+    // Growth of initial principal: P * (1 + r/n)^(n*t)
+    const principalGrowth = P * Math.pow(1 + ratePerPeriod, totalPeriods);
+
+    // Approximate regular additions mapped to compounding period
+    const additionPerPeriod = (monthlyPMT * 12) / n;
+    let contributionGrowth = 0;
+    if (ratePerPeriod > 0) {
+      contributionGrowth = additionPerPeriod * ((Math.pow(1 + ratePerPeriod, totalPeriods) - 1) / ratePerPeriod);
+    } else {
+      contributionGrowth = additionPerPeriod * totalPeriods;
+    }
+
+    const futureValue = principalGrowth + contributionGrowth;
+    const totalDeposited = P + (monthlyPMT * 12 * t);
+    const totalInterest = futureValue - totalDeposited;
+
+    const format = (num) => new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(num);
+
+    document.getElementById('output').innerHTML = `
+      <p><strong>Ending Balance:</strong> ${format(futureValue)}</p>
+      <p><strong>Total Principal & Deposits:</strong> ${format(totalDeposited)}</p>
+      <p><strong>Total Interest Earned:</strong> ${format(totalInterest)}</p>
+    `;
+  }
+
+  document.getElementById('calc-btn').addEventListener('click', computeCompoundInterest);
+  computeCompoundInterest(); // Run initial calculation on load
+</script>
