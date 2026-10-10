@@ -90,7 +90,7 @@
     .nav-menu {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
       list-style: none;
     }
 
@@ -106,7 +106,7 @@
       color: var(--text);
     }
 
-    /* Pong Game Link Button */
+    /* Badge buttons (Pong & Flappy Bird) */
     .nav-badge {
       display: inline-flex;
       align-items: center;
@@ -127,6 +127,18 @@
       color: #ffffff;
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .nav-badge-bird {
+      color: #b45309;
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .nav-badge-bird:hover {
+      background: #f59e0b;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
     }
 
     /* Mobile Menu Toggle */
@@ -236,6 +248,48 @@
       to { transform: rotate(360deg); }
     }
 
+    /* Flappy Bird Card Extra Styling */
+    .game-card-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .game-info h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .game-info p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .play-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      background: #f59e0b;
+      color: #fff;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+
+    .play-btn:hover {
+      background: #d97706;
+      transform: translateY(-2px);
+    }
+
     /* Footer */
     footer {
       border-top: 1px solid var(--border);
@@ -252,8 +306,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: gap;
+      flex-wrap: wrap;
       gap: 16px;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
     }
 
     /* Back to Top */
@@ -298,6 +358,11 @@
           <li><a href="#tools" class="nav-link">Calculators</a></li>
           <li><a href="#about" class="nav-link">Over ons</a></li>
           <li>
+            <a href="flappybird.html" class="nav-badge nav-badge-bird">
+              🐦 Flappy Bird
+            </a>
+          </li>
+          <li>
             <a href="404.html" class="nav-badge">
               🎮 Play Pong (-15%)
             </a>
@@ -315,6 +380,19 @@
     </div>
 
     <div class="card-list">
+      <!-- Flappy Bird Mini Game Card -->
+      <section class="card" id="slot-flappybird">
+        <div class="game-card-content">
+          <div class="game-info">
+            <h2>🐦 Flappy Bird Game</h2>
+            <p>Even een pauze nodig? Vlieg door de buizen en zet een nieuwe highscore neer.</p>
+          </div>
+          <a href="flappybird.html" class="play-btn">
+            Speel Flappy Bird ➔
+          </a>
+        </div>
+      </section>
+
       <!-- Snippet Slot 1 -->
       <section class="card" data-snippet="snippets/scope-estimator.html">
         <div class="card-loading"><div class="spinner"></div> Scope estimator laden...</div>
@@ -344,7 +422,10 @@
   <footer id="about">
     <div class="footer-content">
       <p>&copy; <span id="current-year"></span> My Marketing Agency. Alle rechten voorbehouden.</p>
-      <a href="404.html" style="color: var(--accent-hover); text-decoration: none; font-weight: 500;">Speel Pong voor korting →</a>
+      <div class="footer-links">
+        <a href="flappybird.html" style="color: #b45309; text-decoration: none; font-weight: 500;">🐦 Flappy Bird</a>
+        <a href="404.html" style="color: var(--accent-hover); text-decoration: none; font-weight: 500;">Speel Pong voor korting →</a>
+      </div>
     </div>
   </footer>
 
