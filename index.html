@@ -356,6 +356,7 @@
       <nav>
         <ul class="nav-menu" id="navMenu">
           <li><a href="#tools" class="nav-link">Calculators</a></li>
+          <li><a href="belastingaangifte.html" class="nav-link">Belastingaangifte</a></li>
           <li><a href="#about" class="nav-link">Over ons</a></li>
           <li>
             <a href="flappybird.html" class="nav-badge nav-badge-bird">
@@ -423,6 +424,7 @@
     <div class="footer-content">
       <p>&copy; <span id="current-year"></span> My Marketing Agency. Alle rechten voorbehouden.</p>
       <div class="footer-links">
+        <a href="belastingaangifte.html" class="nav-link">Belastingaangifte</a>
         <a href="flappybird.html" style="color: #b45309; text-decoration: none; font-weight: 500;">🐦 Flappy Bird</a>
         <a href="404.html" style="color: var(--accent-hover); text-decoration: none; font-weight: 500;">Speel Pong voor korting →</a>
       </div>
@@ -441,42 +443,31 @@
       const year = document.getElementById("current-year");
       if (year) year.textContent = new Date().getFullYear();
 
-      // Scroll Progress & Back to Top
+      // Scroll Progress & Back to Top Button
       const prog = document.getElementById("scroll-progress");
       const topBtn = document.getElementById("backToTopBtn");
+
       window.addEventListener("scroll", function () {
-        const top = window.scrollY || document.documentElement.scrollTop;
-        const totalHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        if (prog && totalHeight > 0) prog.style.width = ((top / totalHeight) * 100) + "%";
-        if (topBtn) topBtn.style.display = top > 350 ? "block" : "none";
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+        if (prog) prog.style.width = progress + "%";
+
+        if (topBtn) {
+          if (scrollTop > 300) {
+            topBtn.style.display = "block";
+          } else {
+            topBtn.style.display = "none";
+          }
+        }
       });
 
       if (topBtn) {
-        topBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+        topBtn.addEventListener("click", function () {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
       }
-
-      // Dynamic Snippet Fetcher & Script Executor
-      document.querySelectorAll("[data-snippet]").forEach(function (slot) {
-        const file = slot.getAttribute("data-snippet");
-        fetch(file)
-          .then(res => {
-            if (!res.ok) throw new Error("HTTP " + res.status + " bij laden van " + file);
-            return res.text();
-          })
-          .then(html => {
-            slot.innerHTML = html;
-            slot.querySelectorAll("script").forEach(oldScript => {
-              const newScript = document.createElement("script");
-              Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
-              newScript.appendChild(document.createTextNode(oldScript.innerHTML));
-              oldScript.parentNode.replaceChild(newScript, oldScript);
-            });
-          })
-          .catch(err => {
-            console.error("Fetch fout:", err);
-            slot.innerHTML = `<p style="color: #ef4444; font-size: 13px;">Fout bij het laden van <code>${file}</code>. Controleer het pad of console (F12).</p>`;
-          });
-      });
     });
   </script>
 </body>
