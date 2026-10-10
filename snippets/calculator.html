@@ -1,1 +1,53 @@
+<div class="calc-inner">
+  <span style="font-size: 11px; font-weight: 700; color: #ff4b2b; background: #fff1ee; padding: 2px 8px; border-radius: 20px;">ROI TOOL</span>
+  <h2 style="margin: 8px 0 6px; font-size: 18px;">Workflow Tijdwinst Calculator</h2>
+  <p style="font-size: 13px; color: #4b5563; margin-bottom: 16px;">Bereken hoeveel tijd verloren gaat aan onboarding en basistools.</p>
 
+  <div style="margin-bottom: 14px;">
+    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
+      <span>Teamgrootte:</span>
+      <span id="c-team-val" style="color: #ff4b2b;">5 personen</span>
+    </div>
+    <input type="range" id="c-team" min="1" max="25" value="5" style="width: 100%; accent-color: #ff4b2b;">
+  </div>
+
+  <div style="margin-bottom: 14px;">
+    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
+      <span>Uren per week kwijt aan uitleg/onboarding:</span>
+      <span id="c-hours-val" style="color: #ff4b2b;">3 uur</span>
+    </div>
+    <input type="range" id="c-hours" min="1" max="10" value="3" style="width: 100%; accent-color: #ff4b2b;">
+  </div>
+
+  <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px; margin-top: 14px;">
+    <div id="c-result" style="font-size: 15px; font-weight: 700; color: #111827;"></div>
+    <a href="mailto:Kelvinlindenburg@gmail.com" style="display: inline-block; background: #111827; color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 12px; margin-top: 10px; font-weight: 600;">Plan een intake</a>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const tInput = document.getElementById("c-team");
+    const hInput = document.getElementById("c-hours");
+    const tVal = document.getElementById("c-team-val");
+    const hVal = document.getElementById("c-hours-val");
+    const res = document.getElementById("c-result");
+
+    function update() {
+      const team = parseInt(tInput.value, 10);
+      const hours = parseInt(hInput.value, 10);
+      tVal.textContent = team + " personen";
+      hVal.textContent = hours + " uur";
+
+      const totalHours = team * hours;
+      // 70% besparing * €45/uur * 4.33 weken
+      const euroSaved = Math.round((totalHours * 0.7) * 45 * 4.33);
+
+      res.innerHTML = `Je team verliest <span style="color: #dc2626;">${totalHours} uur per week</span>; een geautomatiseerde hub bespaart <span style="color: #059669;">€ ${euroSaved.toLocaleString("nl-NL")} per maand</span>.`;
+    }
+
+    tInput.addEventListener("input", update);
+    hInput.addEventListener("input", update);
+    update();
+  })();
+</script>
