@@ -170,4 +170,293 @@
 
     .ci-callout {
       border: 1px solid #fed7aa;
-      border-left: 3.
+      border-left: 3.5px solid #ea580c;
+      background: #fffdfb;
+      border-radius: 8px;
+      padding: 14px 16px;
+      font-size: 12.5px;
+      color: #475569;
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    /* Output blokken */
+    .ci-results-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 22px;
+    }
+
+    .ci-stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 620px) {
+      .ci-stats-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ci-stat-card {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+
+    .ci-stat-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .ci-stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #dc2626;
+      line-height: 1.2;
+    }
+
+    .ci-stat-sub {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    /* Groene highlight kaart */
+    .ci-savings-card {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 12px;
+      padding: 18px 22px;
+      margin-bottom: 22px;
+    }
+
+    .ci-savings-title {
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: #166534;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .ci-savings-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: #15803d;
+      margin-bottom: 6px;
+    }
+
+    .ci-savings-desc {
+      font-size: 13px;
+      color: #166534;
+      line-height: 1.45;
+    }
+
+    .ci-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-top: 10px;
+    }
+
+    .ci-footer-note {
+      font-size: 12.5px;
+      color: #64748b;
+    }
+
+    .ci-btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #0b1329;
+      color: #ffffff;
+      padding: 12px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.15s;
+    }
+
+    .ci-btn-cta:hover {
+      background-color: #1e293b;
+    }
+  </style>
+
+  <!-- Header -->
+  <span class="ci-badge">Vermogensopbouw & Rendement</span>
+  <h2 class="ci-title">Calculator: Samengestelde Rente & Groei</h2>
+  <p class="ci-subtitle">Krijg inzicht in de exponentiële groei van jouw vermogen door rente-op-rente en periodieke inleg.</p>
+
+  <!-- Input velden -->
+  <div class="ci-grid-2">
+    <div class="ci-form-group">
+      <label class="ci-label" for="ci-principal">Startbedrag / Beginkapitaal:</label>
+      <div class="ci-input-container">
+        <span class="ci-input-prefix">€</span>
+        <input type="number" id="ci-principal" class="ci-input" value="10000" step="500" min="0">
+      </div>
+      <span class="ci-helper">Eenmalige eerste storting.</span>
+    </div>
+
+    <div class="ci-form-group">
+      <label class="ci-label" for="ci-monthly">Maandelijkse inleg:</label>
+      <div class="ci-input-container">
+        <span class="ci-input-prefix">€</span>
+        <input type="number" id="ci-monthly" class="ci-input" value="250" step="25" min="0">
+      </div>
+      <span class="ci-helper">Bedrag dat maandelijks wordt bijgestort.</span>
+    </div>
+  </div>
+
+  <div class="ci-grid-2">
+    <div class="ci-form-group">
+      <label class="ci-label" for="ci-rate">Verwacht jaarlijks rendement:</label>
+      <div class="ci-input-container">
+        <span class="ci-input-prefix">%</span>
+        <input type="number" id="ci-rate" class="ci-input" value="7.0" step="0.1" min="0">
+      </div>
+      <span class="ci-helper">Gemiddeld historisch markt- of indexrendement.</span>
+    </div>
+
+    <div class="ci-form-group">
+      <label class="ci-label" for="ci-frequency">Rente uitbetaling / compounding:</label>
+      <div class="ci-input-container">
+        <select id="ci-frequency" class="ci-input no-prefix">
+          <option value="12" selected>Maandelijks (meest gekozen)</option>
+          <option value="4">Per kwartaal</option>
+          <option value="1">Jaarlijks</option>
+        </select>
+      </div>
+      <span class="ci-helper">Frequentie waarop rente wordt herbelegd.</span>
+    </div>
+  </div>
+
+  <!-- Slider sectie -->
+  <div class="ci-panel">
+    <div class="ci-slider-header">
+      <span class="ci-slider-title">Beleggingshorizon (looptijd in jaren):</span>
+      <span class="ci-pill-val" id="ci-years-display">15 jaar</span>
+    </div>
+
+    <input type="range" id="ci-years" class="ci-range" min="1" max="40" value="15">
+
+    <div class="ci-callout">
+      💡 <em>Tijd is de krachtigste factor bij samengestelde rente. In de eerste jaren groeit het vermogen vooral door je eigen inleg, maar na verloop van tijd levert het rente-op-rente effect jaarlijks meer op dan de inleg zelf.</em>
+    </div>
+  </div>
+
+  <!-- Resultaten blok -->
+  <div class="ci-results-box">
+    <div class="ci-stats-row">
+      <div class="ci-stat-card">
+        <div class="ci-stat-label">Totale Eigen Inleg</div>
+        <div class="ci-stat-value" id="ci-total-deposited">€ 55.000</div>
+        <div class="ci-stat-sub" id="ci-deposited-sub">Startbedrag + 180 maandstortingen</div>
+      </div>
+
+      <div class="ci-stat-card">
+        <div class="ci-stat-label">Totale Rente / Rendement</div>
+        <div class="ci-stat-value" id="ci-total-interest">€ 53.642</div>
+        <div class="ci-stat-sub" id="ci-interest-sub">Puur rendement door samengestelde rente</div>
+      </div>
+    </div>
+
+    <!-- Groene highlight banner -->
+    <div class="ci-savings-card">
+      <div class="ci-savings-title">Verwachte Eindwaarde Portefeuille</div>
+      <div class="ci-savings-value" id="ci-end-balance">€ 108.642</div>
+      <div class="ci-savings-desc" id="ci-summary-desc">
+        Door <strong>15 jaar</strong> consequent in te leggen, is je initiële vermogen meer dan <strong>verdubbeld</strong> dankzij het rente-op-rente effect.
+      </div>
+    </div>
+
+    <div class="ci-footer">
+      <span class="ci-footer-note" id="ci-calc-note">Berekend op basis van 7.0% per jaar met maandelijkse compounding.</span>
+      <button class="ci-btn-cta" onclick="alert('Plan intake of start actie!');">
+        Plan een intake &rarr;
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const principalEl = document.getElementById('ci-principal');
+    const monthlyEl = document.getElementById('ci-monthly');
+    const rateEl = document.getElementById('ci-rate');
+    const freqEl = document.getElementById('ci-frequency');
+    const yearsEl = document.getElementById('ci-years');
+    const yearsDisplay = document.getElementById('ci-years-display');
+
+    const depositedEl = document.getElementById('ci-total-deposited');
+    const depositedSub = document.getElementById('ci-deposited-sub');
+    const interestEl = document.getElementById('ci-total-interest');
+    const endBalanceEl = document.getElementById('ci-end-balance');
+    const summaryDesc = document.getElementById('ci-summary-desc');
+    const noteEl = document.getElementById('ci-calc-note');
+
+    const euroFmt = new Intl.NumberFormat('nl-NL', {
+      style: 'currency',
+      currency: 'EUR',
+      maximumFractionDigits: 0
+    });
+
+    function calculate() {
+      const P = parseFloat(principalEl.value) || 0;
+      const monthlyPMT = parseFloat(monthlyEl.value) || 0;
+      const annualRate = (parseFloat(rateEl.value) || 0) / 100;
+      const t = parseInt(yearsEl.value, 10) || 1;
+      const n = parseInt(freqEl.value, 10) || 12;
+
+      yearsDisplay.textContent = `${t} jaar`;
+
+      const ratePerPeriod = annualRate / n;
+      const totalPeriods = n * t;
+
+      // Groei van startbedrag
+      const principalGrowth = P * Math.pow(1 + ratePerPeriod, totalPeriods);
+
+      // Groei van maandelijkse toevoegingen
+      const additionPerPeriod = (monthlyPMT * 12) / n;
+      let contributionGrowth = 0;
+      if (ratePerPeriod > 0) {
+        contributionGrowth = additionPerPeriod * ((Math.pow(1 + ratePerPeriod, totalPeriods) - 1) / ratePerPeriod);
+      } else {
+        contributionGrowth = additionPerPeriod * totalPeriods;
+      }
+
+      const endBalance = principalGrowth + contributionGrowth;
+      const totalDeposited = P + (monthlyPMT * 12 * t);
+      const totalInterest = Math.max(0, endBalance - totalDeposited);
+
+      // Render waarden
+      depositedEl.textContent = euroFmt.format(totalDeposited);
+      depositedSub.textContent = `Startbedrag + ${t * 12} maandstortingen`;
+      interestEl.textContent = euroFmt.format(totalInterest);
+      endBalanceEl.textContent = euroFmt.format(endBalance);
+
+      const multiplier = totalDeposited > 0 ? (endBalance / totalDeposited).toFixed(1) : 0;
+      summaryDesc.innerHTML = `Door <strong>${t} jaar</strong> consequent te beleggen, groeit je totale inleg met een factor <strong>${multiplier}x</strong> dankzij het rente-op-rente effect.`;
+      noteEl.textContent = `Berekend op basis van ${(annualRate * 100).toFixed(1)}% per jaar met ${n === 12 ? 'maandelijkse' : n === 4 ? 'kwartaallijkse' : 'jaarlijkse'} compounding.`;
+    }
+
+    // Luister naar alle veranderingen
+    [principalEl, monthlyEl, rateEl, freqEl, yearsEl].forEach(input => {
+      input.addEventListener('input', calculate);
+    });
+
+    calculate();
+  })();
+</script>
