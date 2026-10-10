@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>404 - Page Not Found | Play Pong for a Discount</title>
+  <title>404 - Pagina niet gevonden | Speel Pong</title>
   <style>
     :root {
       --bg: #09090b;
@@ -24,7 +24,7 @@
     }
 
     body {
-      background: radial-gradient(circle at 50% 20%, #1e1e24, var(--bg));
+      background: radial-gradient(circle at 50% 15%, #1e1e24, var(--bg));
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -44,37 +44,34 @@
       align-items: center;
     }
 
-    .badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: rgba(239, 68, 68, 0.15);
+    .error-code {
+      font-size: clamp(3.5rem, 8vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
       color: var(--danger);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      padding: 4px 12px;
-      border-radius: 999px;
-      margin-bottom: 12px;
+      text-shadow: 0 0 30px rgba(239, 68, 68, 0.25);
+      margin-bottom: 4px;
     }
 
     h1 {
-      font-size: clamp(1.8rem, 4vw, 2.4rem);
-      font-weight: 800;
+      font-size: clamp(1.4rem, 3vw, 1.8rem);
+      font-weight: 700;
       letter-spacing: -0.02em;
-      line-height: 1.2;
+      line-height: 1.3;
+      margin-bottom: 8px;
     }
 
     .subtitle {
       color: var(--text-muted);
-      font-size: 1rem;
-      margin-top: 8px;
-      margin-bottom: 20px;
+      font-size: 0.95rem;
+      max-width: 520px;
+      margin-bottom: 24px;
+      line-height: 1.5;
     }
 
-    .subtitle span {
+    .subtitle strong {
       color: var(--accent);
-      font-weight: 600;
     }
 
     .game-wrapper {
@@ -94,11 +91,53 @@
       height: auto;
     }
 
+    /* 3 Seconden Countdown Overlay */
+    .countdown-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(9, 9, 11, 0.75);
+      backdrop-filter: blur(3px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: opacity 0.2s ease;
+    }
+
+    .countdown-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .countdown-number {
+      font-size: 5rem;
+      font-weight: 900;
+      color: var(--accent);
+      animation: pulse 0.8s ease-in-out infinite;
+    }
+
+    .countdown-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.6; }
+    }
+
+    /* Modal overlay na afloop */
     .game-modal {
       position: absolute;
       inset: 0;
-      background: rgba(9, 9, 11, 0.88);
-      backdrop-filter: blur(4px);
+      background: rgba(9, 9, 11, 0.9);
+      backdrop-filter: blur(6px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -107,6 +146,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.25s ease;
+      z-index: 20;
     }
 
     .game-modal.visible {
@@ -122,28 +162,9 @@
     .game-modal p {
       color: var(--text-muted);
       font-size: 0.95rem;
-      max-width: 380px;
+      max-width: 420px;
       line-height: 1.5;
-      margin-bottom: 20px;
-    }
-
-    .coupon-box {
-      display: flex;
-      align-items: center;
-      background: var(--card-bg);
-      border: 1px dashed var(--accent);
-      border-radius: 8px;
-      padding: 6px 14px;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .coupon-code {
-      font-family: monospace;
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: var(--accent);
+      margin-bottom: 22px;
     }
 
     .btn {
@@ -200,32 +221,35 @@
 <body>
 
   <main class="container">
-    <div class="badge">404 Error</div>
-    <h1>Lost your way? Find a discount instead.</h1>
+    <div class="error-code">404</div>
+    <h1>Oeps! Deze pagina bestaat niet meer.</h1>
     <p class="subtitle">
-      Beat the AI to <span>3 points</span> to claim your <strong>15% off</strong> checkout code.
+      De link die je hebt geopend klopt niet of is verplaatst. Versla onze AI met <strong>3 punten</strong> en ontgrendel een <strong>vrijblijvend adviesgesprek</strong>!
     </p>
 
     <div class="game-wrapper" id="gameWrapper">
+      <!-- Countdown scherm -->
+      <div class="countdown-overlay" id="countdownOverlay">
+        <div class="countdown-number" id="countdownNumber">3</div>
+        <div class="countdown-text">Spel start over...</div>
+      </div>
+
       <canvas id="pongCanvas" width="600" height="380"></canvas>
 
+      <!-- Einde spel overlay -->
       <div class="game-modal" id="gameModal">
-        <h2 id="modalTitle">Victory!</h2>
-        <p id="modalDesc">You outplayed our AI. Use the coupon code below at checkout.</p>
-        
-        <div class="coupon-box" id="couponBox">
-          <span class="coupon-code">PONG15</span>
-          <button class="btn btn-primary" id="copyBtn" onclick="copyCoupon()">Copy</button>
-        </div>
+        <h2 id="modalTitle">Gefeliciteerd! Gewonnen!</h2>
+        <p id="modalDesc">Je hebt onze AI verslagen. Laten we sparren over je ambities via een gratis adviesgesprek.</p>
 
         <div class="modal-actions">
-          <button class="btn btn-outline" onclick="restartGame()">Play Again</button>
-          <a href="/" class="btn btn-primary">Return to Homepage</a>
+          <a href="#adviesgesprek" id="consultBtn" class="btn btn-primary">Plan vrijblijvend adviesgesprek →</a>
+          <button class="btn btn-outline" onclick="restartGame()">Opnieuw spelen</button>
+          <a href="./" class="btn btn-outline">Terug naar homepage</a>
         </div>
       </div>
     </div>
 
-    <p class="instructions">Controls: <strong>W/S</strong> or <strong>Up/Down arrows</strong> (or drag directly on touchscreens)</p>
+    <p class="instructions">Besturing: <strong>W/S</strong> of <strong>Pijltjestoetsen</strong> (of sleep met je vinger op mobiel)</p>
   </main>
 
   <script>
@@ -234,12 +258,15 @@
     const modal = document.getElementById('gameModal');
     const modalTitle = document.getElementById('modalTitle');
     const modalDesc = document.getElementById('modalDesc');
-    const couponBox = document.getElementById('couponBox');
-    const copyBtn = document.getElementById('copyBtn');
+    const consultBtn = document.getElementById('consultBtn');
+    const countdownOverlay = document.getElementById('countdownOverlay');
+    const countdownNumber = document.getElementById('countdownNumber');
 
     const WINNING_SCORE = 3;
     let isGameOver = false;
+    let isCountingDown = true;
 
+    // Web Audio Synthesizer
     let audioCtx = null;
     function playSound(freq, duration) {
       if (!audioCtx) {
@@ -285,6 +312,7 @@
       dy: 0
     };
 
+    // Toetsenbord besturing
     const keys = {};
     window.addEventListener('keydown', (e) => {
       if (['ArrowUp', 'ArrowDown', 'w', 's', 'W', 'S'].includes(e.key)) {
@@ -298,6 +326,7 @@
       }
     });
 
+    // Touch / Muis besturing
     function handlePointerMove(e) {
       const rect = canvas.getBoundingClientRect();
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -327,9 +356,35 @@
       );
     }
 
-    function update() {
-      if (isGameOver) return;
+    // 3 Seconde Countdown functie
+    function startCountdown(callback) {
+      isCountingDown = true;
+      countdownOverlay.classList.remove('hidden');
+      let count = 3;
+      countdownNumber.innerText = count;
+      playSound(300, 0.08);
 
+      const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+          countdownNumber.innerText = count;
+          playSound(300, 0.08);
+        } else if (count === 0) {
+          countdownNumber.innerText = "GO!";
+          playSound(600, 0.12);
+        } else {
+          clearInterval(interval);
+          countdownOverlay.classList.add('hidden');
+          isCountingDown = false;
+          if (callback) callback();
+        }
+      }, 1000);
+    }
+
+    function update() {
+      if (isGameOver || isCountingDown) return;
+
+      // Speler beweging (toetsenbord)
       if (keys['arrowup'] || keys['w']) {
         player.y -= player.speed;
         player.targetY = null;
@@ -338,25 +393,30 @@
         player.targetY = null;
       }
 
+      // Speler beweging (touch/muis)
       if (player.targetY !== null) {
         player.y += (player.targetY - player.y) * 0.25;
       }
 
       player.y = Math.max(0, Math.min(canvas.height - paddleHeight, player.y));
 
+      // AI beweging
       const aiTarget = ball.y - paddleHeight / 2;
       if (ai.y < aiTarget - 8) ai.y += ai.speed;
       else if (ai.y > aiTarget + 8) ai.y -= ai.speed;
       ai.y = Math.max(0, Math.min(canvas.height - paddleHeight, ai.y));
 
+      // Bal verplaatsen
       ball.x += ball.dx;
       ball.y += ball.dy;
 
+      // Boven- en onderkant botsing
       if (ball.y - ball.radius <= 0 || ball.y + ball.radius >= canvas.height) {
         ball.dy = -ball.dy;
         playSound(260, 0.05);
       }
 
+      // Paddle botsing
       const paddle = ball.dx < 0 ? player : ai;
       if (checkPaddleHit(paddle)) {
         const hitOffset = (ball.y - (paddle.y + paddleHeight / 2)) / (paddleHeight / 2);
@@ -371,6 +431,7 @@
         playSound(ball.dx > 0 ? 440 : 380, 0.06);
       }
 
+      // Scores
       if (ball.x + ball.radius < 0) {
         ai.score++;
         playSound(180, 0.15);
@@ -385,9 +446,11 @@
     }
 
     function render() {
+      // Veld wissen
       ctx.fillStyle = '#09090b';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      // Stippellijn
       ctx.strokeStyle = '#27272a';
       ctx.lineWidth = 2;
       ctx.setLineDash([8, 8]);
@@ -397,18 +460,22 @@
       ctx.stroke();
       ctx.setLineDash([]);
 
+      // Scores
       ctx.fillStyle = '#71717a';
       ctx.font = '700 32px monospace';
       ctx.textAlign = 'center';
       ctx.fillText(player.score, canvas.width / 4, 50);
       ctx.fillText(ai.score, (canvas.width * 3) / 4, 50);
 
+      // Speler Paddle
       ctx.fillStyle = '#10b981';
       ctx.fillRect(player.x, player.y, paddleWidth, paddleHeight);
 
+      // AI Paddle
       ctx.fillStyle = '#a1a1aa';
       ctx.fillRect(ai.x, ai.y, paddleWidth, paddleHeight);
 
+      // Bal
       ctx.fillStyle = '#fafafa';
       ctx.beginPath();
       ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
@@ -424,15 +491,15 @@
     function triggerGameOver(playerWon) {
       isGameOver = true;
       if (playerWon) {
-        modalTitle.innerText = "You Won!";
+        modalTitle.innerText = "Gewonnen!";
         modalTitle.style.color = "var(--accent)";
-        modalDesc.innerText = "Nice reflexes! Here is your 15% discount for your first checkout:";
-        couponBox.style.display = "flex";
+        modalDesc.innerText = "Gefeliciteerd, je hebt onze AI verslagen! Plan hieronder direct een vrijblijvend adviesgesprek in.";
+        consultBtn.style.display = "inline-flex";
       } else {
-        modalTitle.innerText = "AI Wins This Round!";
+        modalTitle.innerText = "Helaas, de AI wint!";
         modalTitle.style.color = "var(--danger)";
-        modalDesc.innerText = "Close match! Give it another shot to claim your 15% discount code.";
-        couponBox.style.display = "none";
+        modalDesc.innerText = "Net niet! Probeer het gerust nog een keer om alsnog een gesprek te ontgrendelen.";
+        consultBtn.style.display = "none";
       }
       modal.classList.add('visible');
     }
@@ -443,18 +510,12 @@
       modal.classList.remove('visible');
       resetBall('player');
       isGameOver = false;
+      startCountdown();
     }
 
-    function copyCoupon() {
-      navigator.clipboard.writeText('PONG15').then(() => {
-        copyBtn.innerText = 'Copied!';
-        setTimeout(() => {
-          copyBtn.innerText = 'Copy';
-        }, 2000);
-      });
-    }
-
+    // Start spel met afteller
     resetBall('player');
+    startCountdown();
     gameLoop();
   </script>
 </body>
