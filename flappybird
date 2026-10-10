@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanilla JS Flappy Bird</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #2c3e50;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            overflow: hidden;
+        }
+        h1 {
+            margin: 5px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-size: 24px;
+        }
+        canvas {
+            border: 4px solid #fff;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background-color: #70c5ce;
+            max-width: 100%;
+            max-height: 80vh;
+        }
+        .controls {
+            margin-top: 10px;
+            font-size: 14px;
+            opacity: 0.8;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Flappy Bird</h1>
+    <canvas id="gameCanvas" width="400" height="550"></canvas>
+    <div class="controls">Druk op <strong>SPATIE</strong> of <strong>KLIK</strong> om te vliegen!</div>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Spelvariabelen
+        let gameState = "START"; // START, PLAYING, GAME_OVER
+        let score = 0;
+        let highscore = localStorage.getItem("highScore") || 0;
+        let frames = 0;
+
+        // Geluiden (gegenereerd met de Web Audio API zodat er geen losse audiobestanden nodig zijn)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'jump') {
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.15);
+            } else if (type === 'score') {
+                osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(700, audioCtx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.2);
+            } else if (type === 'hit') {
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        // De Vogel
+        const bird = {
+            x: 50,
+            y: 150,
+            width: 34,
+            height: 24,
+            gravity: 0.25,
+            jumpForce: -5.3,
+            velocity: 0,
+            
+            draw() {
+                ctx.save();
+                ctx.translate(this.x + this.width/2, this.y + this.height/2);
+                // Roteer de vogel op basis van zijn valsnelheid
+                let rotation = Math.min(Math.PI / 4, Math.max(-Math.PI / 8, this.velocity * 0.05));
+                ctx.rotate(rotation);
+
+                // Vogel-lichaam (Geel)
+                ctx.fillStyle = "#f1c40f";
+                ctx.beginPath();
+                ctx.ellipse(0, 0, this.width/2, this.height/2, 0, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.strokeStyle = "#000";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Oog (Wit/Zwart)
+                ctx.fillStyle = "#fff";
+                ctx.beginPath();
+                ctx.arc(6, -4, 5, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();
+                
+                ctx.fillStyle = "#000";
+                ctx.beginPath();
+                ctx.arc(7, -4, 2, 0, 2 * Math.PI);
+                ctx.fill();
+
+                // Snavel (Oranje)
+                ctx.fillStyle = "#e67e22";
+                ctx.beginPath();
+                ctx.moveTo(10, -2);
+                ctx.lineTo(20, 2);
+                ctx.lineTo(8, 6);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+
+                // Vleugel (Wit/Geel)
+                ctx.fillStyle = "#f39c12";
+                ctx.beginPath();
+                ctx.ellipse(-6, 2, 7, 5, Math.sin(frames * 0.2) * 0.3, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.restore();
+            },
+
+            update() {
+                if (gameState === "PLAYING") {
+                    this.velocity += this.gravity;
+                    this.y += this.velocity;
+
+                    // Voorkom dat de vogel de bovenkant verlaat
+                    if (this.y < 0) {
+                        this.y = 0;
+                        this.velocity = 0;
+                    }
+
+                    // Grond-botsing check
+                    if (this.y + this.height >= canvas.height - 50) {
+                        this.y = canvas.height - 50 - this.height;
+                        gameOver();
+                    }
+                } else if (gameState === "START") {
+                    // Zweef-effect op het startscherm
+                    this.y = 150 + Math.sin(frames * 0.1) * 10;
+                }
+            },
+
+            jump() {
+                this.velocity = this.jumpForce;
+                playSound('jump');
+            },
+
+            reset() {
+                this.y = 150;
+                this.velocity = 0;
+            }
+        };
+
+        // De Buizen (Obstakels)
+        const pipes = {
+            position: [],
+            width: 60,
+            gap: 120,
+            speed: 2,
+
+            draw() {
+                ctx.fillStyle = "#2ecc71";
+                ctx.strokeStyle = "#27ae60";
+                ctx.lineWidth = 4;
+
+                for (let i = 0; i < this.position.length; i++) {
+                    let p = this.position[i];
+
+                    // Bovenste buis
+                    ctx.fillRect(p.x, 0, this.width, p.top);
+                    ctx.strokeRect(p.x, -4, this.width, p.top + 4);
+                    // Kop van de bovenste buis
+                    ctx.fillRect(p.x - 4, p.top - 20, this.width + 8, 20);
+                    ctx.strokeRect(p.x - 4, p.top - 20, this.width + 8, 20);
+
+                    // Onderste buis
+                    let bottomY = p.top + this.gap;
+                    let bottomHeight = (canvas.height - 50) - bottomY;
+                    ctx.fillRect(p.x, bottomY, this.width, bottomHeight);
+                    ctx.strokeRect(p.x, bottomY, this.width, bottomHeight + 4);
+                    // Kop van de onderste buis
+                    ctx.fillRect(p.x - 4, bottomY, this.width + 8, 20);
+                    ctx.strokeRect(p.x - 4, bottomY, this.width + 8, 20);
+                }
+            },
+
+            update() {
+                if (gameState !== "PLAYING") return;
+
+                // Voeg elke 110 frames een nieuwe buis toe
+                if (frames % 110 === 0) {
+                    let minHeight = 50;
+                    let maxHeight = canvas.height - 50 - this.gap - 50;
+                    let top = Math.floor(Math.random() * (maxHeight - minHeight + 1) + minHeight);
+
+                    this.position.push({
+                        x: canvas.width,
+                        top: top,
+                        passed: false
+                    });
+                }
+
+                for (let i = this.position.length - 1; i >= 0; i--) {
+                    let p = this.position[i];
+                    p.x -= this.speed;
+
+                    // Botsingsdetectie (AABB Collision)
+                    if (
+                        bird.x + bird.width > p.x &&
+                        bird.x < p.x + this.width &&
+                        (bird.y < p.top || bird.y + bird.height > p.top + this.gap)
+                    ) {
+                        gameOver();
+                    }
+
+                    // Score verhogen
+                    if (!p.passed && p.x + this.width/2 < bird.x) {
+                        p.passed = true;
+                        score++;
+                        playSound('score');
+                        if (score > highscore) {
+                            highscore = score;
+                            localStorage.setItem("highScore", highscore);
+                        }
+                    }
+
+                    // Verwijder buizen die uit het scherm zijn
+                    if (p.x + this.width < 0) {
+                        this.position.splice(i, 1);
+                    }
+                }
+            },
+
+            reset() {
+                this.position = [];
+            }
+        };
+
+        // De Grond & Omgeving
+        const bg = {
+            draw() {
+                // Wolken en bergen achtergrond (simpel)
+                ctx.fillStyle = "#87ceeb"; // Lucht is al canvas background, maar extra detail:
+                
+                // Wolken
+                ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+                ctx.beginPath();
+                ctx.arc(80, 80, 20, 0, Math.PI*2);
+                ctx.arc(100, 75, 25, 0, Math.PI*2);
+                ctx.arc(120, 80, 20, 0, Math.PI*2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.arc(280, 100, 15, 0, Math.PI*2);
+                ctx.arc(295, 95, 20, 0, Math.PI*2);
+                ctx.arc(310, 100, 15, 0, Math.PI*2);
+                ctx.fill();
+
+                // Stad/bos silhouetten
+                ctx.fillStyle = "#65b5be";
+                ctx.fillRect(0, canvas.height - 110, canvas.width, 60);
+
+                // De bewegende Grond
+                ctx.fillStyle = "#e0c595";
+                ctx.fillRect(0, canvas.height - 50, canvas.width, 50);
+
+                // Groene bovenkant van de grond
+                ctx.fillStyle = "#2ecc71";
+                ctx.fillRect(0, canvas.height - 50, canvas.width, 12);
+                ctx.fillStyle = "#27ae60";
+                ctx.fillRect(0, canvas.height - 38, canvas.width, 4);
+                
+                // Grond grens
+                ctx.strokeStyle = "#000";
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(0, canvas.height - 50);
+                ctx.lineTo(canvas.width, canvas.height - 50);
+                ctx.stroke();
+            }
+        };
+
+        // User Interface
+        const ui = {
+            draw() {
+                if (gameState === "START") {
+                    ctx.fillStyle = "rgba(0,0,0,0.4)";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.fillStyle = "#fff";
+                    ctx.textAlign = "center";
+                    ctx.shadowColor = "#000";
+                    ctx.shadowBlur = 4;
+
+                    ctx.font = "bold 32px Arial";
+                    ctx.fillText("FLAPPY BIRD", canvas.width/2, canvas.height/2 - 60);
+
+                    ctx.font = "20px Arial";
+                    ctx.fillText("Klik of druk Spatie om te starten", canvas.width/2, canvas.height/2);
+
+                    ctx.font = "bold 16px Arial";
+                    ctx.fillStyle = "#f1c40f";
+                    ctx.fillText(`Highscore: ${highscore}`, canvas.width/2, canvas.height/2 + 50);
+                }
+
+                if (gameState === "GAME_OVER") {
+                    ctx.fillStyle = "rgba(0,0,0,0.5)";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.fillStyle = "#fff";
+                    ctx.textAlign = "center";
+                    ctx.shadowColor = "#000";
+                    ctx.shadowBlur = 4;
+
+                    ctx.font = "bold 36px Arial";
+                    ctx.fillStyle = "#e74c3c";
+                    ctx.fillText("GAME OVER", canvas.width/2, canvas.height/2 - 60);
+
+                    ctx.fillStyle = "#fff";
+                    ctx.font = "24px Arial";
+                    ctx.fillText(`Score: ${score}`, canvas.width/2, canvas.height/2 - 10);
+                    ctx.fillText(`Beste Score: ${highscore}`, canvas.width/2, canvas.height/2 + 25);
+
+                    ctx.font = "18px Arial";
+                    ctx.fillStyle = "#f1c40f";
+                    ctx.fillText("Klik of druk Spatie om opnieuw te spelen", canvas.width/2, canvas.height/2 + 80);
+                }
+
+                if (gameState === "PLAYING") {
+                    // Live Score
+                    ctx.fillStyle = "#fff";
+                    ctx.textAlign = "center";
+                    ctx.shadowColor = "#000";
+                    ctx.shadowBlur = 4;
+                    ctx.font = "bold 40px Arial";
+                    ctx.fillText(score, canvas.width/2, 60);
+                }
+
+                // Reset shadow
+                ctx.shadowBlur = 0;
+            }
+        };
+
+        // Game over logica
+        function gameOver() {
+            if (gameState === "PLAYING") {
+                gameState = "GAME_OVER";
+                playSound('hit');
+            }
+        }
+
+        // Game Start / Restart logica
+        function checkAction() {
+            if (gameState === "START") {
+                gameState = "PLAYING";
+                bird.jump();
+            } else if (gameState === "PLAYING") {
+                bird.jump();
+            } else if (gameState === "GAME_OVER") {
+                pipes.reset();
+                bird.reset();
+                score = 0;
+                gameState = "PLAYING";
+                bird.jump();
+            }
+        }
+
+        // Event listeners (besturing)
+        window.addEventListener("keydown", function(e) {
+            if (e.code === "Space") {
+                e.preventDefault(); // Voorkom scrollen met de spatiebalk
+                checkAction();
+            }
+        });
+
+        canvas.addEventListener("pointerdown", function(e) {
+            e.preventDefault();
+            checkAction();
+        });
+
+        // Game Loop (Update & Render)
+        function loop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            bg.draw();
+            pipes.update();
+            pipes.draw();
+            bird.update();
+            bird.draw();
+            ui.draw();
+
+            frames++;
+            requestAnimationFrame(loop);
+        }
+
+        // Start het spel
+        loop();
+    </script>
+</body>
+</html>
