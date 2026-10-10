@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,15 +13,9 @@
       line-height: 1.6;
       background-color: #f9fafb;
       color: #111827;
-      /* Extended height to allow scrolling tests */
       min-height: 2500px;
     }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
+    .container { max-width: 800px; margin: 0 auto; }
     .card {
       background: #ffffff;
       border: 1px solid #e5e7eb;
@@ -30,7 +24,6 @@
       margin-bottom: 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-
     footer {
       max-width: 800px;
       margin: 60px auto 0;
@@ -39,419 +32,87 @@
       color: #6b7280;
       font-size: 14px;
     }
-
-    /* -------------------------------------------
-       SNIPPET 1: Scroll Progress Bar Styles
-       ------------------------------------------- */
+    /* Vaste global features */
     #scroll-progress {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 5px;
+      position: fixed; top: 0; left: 0; height: 5px;
       background: linear-gradient(90deg, #ff416c, #ff4b2b);
-      width: 0%;
-      z-index: 99999;
-      transition: width 0.1s ease-out;
+      width: 0%; z-index: 99999; transition: width 0.1s ease-out;
     }
-
-    /* -------------------------------------------
-       SNIPPET 3: Exit-Intent Popup Styles
-       ------------------------------------------- */
-    #exit-modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 100000;
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-box {
-      background: white;
-      padding: 32px;
-      border-radius: 12px;
-      max-width: 420px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
-    .modal-box button {
-      margin-top: 16px;
-      padding: 10px 20px;
-      border: none;
-      background: #111827;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    /* -------------------------------------------
-       SNIPPET 4: Back-to-Top Button Styles
-       ------------------------------------------- */
     #backToTopBtn {
-      display: none;
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      z-index: 9999;
-      border: none;
-      outline: none;
-      background-color: #111827;
-      color: #fff;
-      cursor: pointer;
-      padding: 12px 18px;
-      border-radius: 50px;
-      font-size: 14px;
-      font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    #backToTopBtn:hover {
-      background-color: #374151;
-    }
-
-    /* -------------------------------------------
-       SNIPPET 5: Workflow Tijdwinst Calculator Styles
-       ------------------------------------------- */
-    .calc-badge {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #ff4b2b;
-      background: #fff1ee;
-      border: 1px solid #ffd8cf;
-      padding: 2px 8px;
-      border-radius: 20px;
-      margin-bottom: 8px;
-    }
-
-    .slider-group {
-      margin-bottom: 20px;
-    }
-
-    .slider-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 8px;
-    }
-
-    .slider-val {
-      font-size: 14px;
-      font-weight: 700;
-      color: #ff4b2b;
-      background: #fff5f3;
-      padding: 2px 8px;
-      border-radius: 6px;
-      border: 1px solid #ffd8cf;
-    }
-
-    .range-input {
-      width: 100%;
-      height: 6px;
-      border-radius: 3px;
-      background: #e5e7eb;
-      outline: none;
-      -webkit-appearance: none;
-      cursor: pointer;
-    }
-
-    .range-input::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #ff4b2b;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(255, 75, 43, 0.4);
-      transition: transform 0.1s ease;
-    }
-
-    .range-input::-webkit-slider-thumb:hover {
-      transform: scale(1.15);
-    }
-
-    .calc-extra-settings {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 22px;
-      font-size: 13px;
-      color: #6b7280;
-    }
-
-    .calc-extra-settings input {
-      width: 70px;
-      padding: 6px 8px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 13px;
-      color: #111827;
-      font-weight: 600;
-    }
-
-    .result-banner {
-      background: #f9fafb;
-      border: 1.5px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 18px 20px;
-      margin-top: 10px;
-    }
-
-    .result-primary {
-      font-size: 16px;
-      font-weight: 700;
-      color: #111827;
-      margin-bottom: 6px;
-      line-height: 1.5;
-    }
-
-    .result-primary .loss-highlight {
-      color: #dc2626;
-    }
-
-    .result-primary .save-highlight {
-      color: #059669;
-    }
-
-    .result-sub {
-      font-size: 13px;
-      color: #6b7280;
-    }
-
-    .calc-cta {
-      margin-top: 16px;
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    .calc-cta a {
-      display: inline-block;
-      background: #111827;
-      color: #fff;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      padding: 8px 16px;
-      border-radius: 6px;
-      transition: background 0.15s ease;
-    }
-
-    .calc-cta a:hover {
-      background: #ff4b2b;
+      display: none; position: fixed; bottom: 30px; right: 30px;
+      z-index: 9999; border: none; background-color: #111827; color: #fff;
+      cursor: pointer; padding: 12px 18px; border-radius: 50px; font-size: 14px;
+      font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
   </style>
 </head>
 <body>
 
-  <!-- Elements for Snippets -->
   <div id="scroll-progress"></div>
-
-  <div id="exit-modal-overlay">
-    <div class="modal-box">
-      <h2>Wait! Before you leave...</h2>
-      <p>Get our free 2026 Agency Marketing Checklist.</p>
-      <button id="close-modal-btn">Close Window</button>
-    </div>
-  </div>
-
   <button id="backToTopBtn" aria-label="Back to top">↑ Top</button>
 
-  <!-- Sandbox Page Content -->
   <div class="container">
     <h1>Marketing Agency Snippets Sandbox</h1>
-    <p>Use this page to verify how your scripts behave before putting them on your live agency site.</p>
+    <p>Hieronder worden je actieve snippets automatisch ingeladen:</p>
 
-    <!-- WORKFLOW TIJDWINST CALCULATOR -->
-    <div class="card">
-      <div class="calc-badge">ROI & Efficiency Tool</div>
-      <h2 style="margin: 0 0 6px 0; font-size: 20px;">Workflow Tijdwinst Calculator</h2>
-      <p style="font-size: 14px; color: #4b5563; margin-bottom: 20px;">
-        Ontdek hoeveel tijd en budget er weglekt aan repeterende onboarding-vragen, zoektochten naar bestanden en basis tool-instructies.
-      </p>
-
-      <!-- Slider 1: Teamgrootte -->
-      <div class="slider-group">
-        <div class="slider-header">
-          <span>Teamgrootte</span>
-          <span class="slider-val" id="team-size-display">5 personen</span>
-        </div>
-        <input type="range" class="range-input" id="team-size-input" min="1" max="30" value="5" />
-      </div>
-
-      <!-- Slider 2: Verloren uren per week per persoon -->
-      <div class="slider-group">
-        <div class="slider-header">
-          <span>Uren per persoon/week aan basisvragen & tool-uitleg</span>
-          <span class="slider-val" id="hours-display">3 uur / week</span>
-        </div>
-        <input type="range" class="range-input" id="hours-input" min="1" max="10" step="0.5" value="3" />
-      </div>
-
-      <!-- Extra: Geschat uurtarief -->
-      <div class="calc-extra-settings">
-        <label for="hourly-rate-input">Gemiddelde personeelskost per uur (€):</label>
-        <input type="number" id="hourly-rate-input" value="45" min="15" max="250" step="5" />
-      </div>
-
-      <!-- Dynamisch Resultaat -->
-      <div class="result-banner">
-        <div class="result-primary" id="calc-primary-result">
-          Berekenen...
-        </div>
-        <div class="result-sub" id="calc-secondary-result">
-          Berekenen...
-        </div>
-        <div class="calc-cta">
-          <a href="mailto:Kelvinlindenburg@gmail.com?subject=Workflow%20Tijdwinst%20Gesprek">Claim deze tijdwinst → Boek een Meeting</a>
-        </div>
-      </div>
+    <!-- ============================================== -->
+    <!-- DE SNIPPET SLOTS: Hier pluggen we tools in!   -->
+    <!-- ============================================== -->
+    <div id="slot-calculator" class="card" data-snippet="snippets/calculator.html">
+      <p style="color: #9ca3af; font-size: 13px;">Snippet laden...</p>
     </div>
 
+    <!-- Vaste testkaartjes -->
     <div class="card">
-      <h3>Test 1: Reading Progress Bar</h3>
-      <p>Scroll down the page. Look at the very top edge of the window — you should see a red/orange gradient progress bar filling from left to right as you scroll.</p>
-    </div>
-
-    <div class="card">
-      <h3>Test 2: Exit-Intent Modal</h3>
-      <p>Move your mouse cursor quickly upwards toward the browser's address bar or tab strip. The exit popup should trigger once.</p>
-    </div>
-
-    <div class="card">
-      <h3>Test 3: Back-to-Top Button</h3>
-      <p>Scroll down past the first 400 pixels. A floating "↑ Top" button will pop up in the bottom-right corner. Click it to smoothly return to the top.</p>
-    </div>
-
-    <div class="card">
-      <h3>Test 4: Auto Copyright Year</h3>
-      <p>Check the footer at the bottom of the page. The year is generated dynamically via JavaScript.</p>
+      <h3>Test: Reading Progress Bar</h3>
+      <p>Scrol omlaag om de balk bovenaan te testen.</p>
     </div>
   </div>
 
   <footer>
     <div class="container">
-      &copy; <span id="current-year">Loading...</span> My Marketing Agency. All rights reserved.
+      &copy; <span id="current-year"></span> My Marketing Agency. All rights reserved.
     </div>
   </footer>
 
-  <!-- ========================================== -->
-  <!-- JAVASCRIPT SNIPPETS                        -->
-  <!-- ========================================== -->
   <script>
+    // Vaste algemene functies (jaar + scroll)
     document.addEventListener("DOMContentLoaded", function () {
-      // 1. Dynamic Year
-      const yearSpan = document.getElementById("current-year");
-      if (yearSpan) {
-        yearSpan.textContent = new Date().getFullYear();
-      }
+      const year = document.getElementById("current-year");
+      if (year) year.textContent = new Date().getFullYear();
 
-      // 2. Reading Progress Bar & Back-to-Top Button Scroll Logic
-      const progressBar = document.getElementById("scroll-progress");
-      const backBtn = document.getElementById("backToTopBtn");
-
+      const prog = document.getElementById("scroll-progress");
+      const topBtn = document.getElementById("backToTopBtn");
       window.addEventListener("scroll", function () {
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        
-        // Update progress bar
-        if (progressBar && scrollHeight > 0) {
-          const progress = (scrollTop / scrollHeight) * 100;
-          progressBar.style.width = progress + "%";
-        }
-
-        // Show/Hide Back-to-Top button
-        if (backBtn) {
-          if (scrollTop > 400) {
-            backBtn.style.display = "block";
-          } else {
-            backBtn.style.display = "none";
-          }
-        }
+        const top = window.scrollY || document.documentElement.scrollTop;
+        const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        if (prog && h > 0) prog.style.width = ((top / h) * 100) + "%";
+        if (topBtn) topBtn.style.display = top > 350 ? "block" : "none";
       });
+      if (topBtn) topBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 
-      // Smooth Scroll on Back-to-Top click
-      if (backBtn) {
-        backBtn.addEventListener("click", function () {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        });
-      }
-
-      // 3. Exit Intent Detection
-      const modal = document.getElementById("exit-modal-overlay");
-      const closeBtn = document.getElementById("close-modal-btn");
-
-      document.addEventListener("mouseleave", function (e) {
-        if (e.clientY <= 10 && !sessionStorage.getItem("exitPopupShown")) {
-          sessionStorage.setItem("exitPopupShown", "true");
-          if (modal) {
-            modal.style.display = "flex";
-          }
-        }
+      // DE MAGIE: Laad automatisch alle bestanden in uit data-snippet
+      document.querySelectorAll("[data-snippet]").forEach(function (slot) {
+        const file = slot.getAttribute("data-snippet");
+        fetch(file)
+          .then(res => {
+            if (!res.ok) throw new Error("Bestand niet gevonden");
+            return res.text();
+          })
+          .then(html => {
+            slot.innerHTML = html;
+            // Voer eventuele <script> tags uit die in het snippet-bestandje zitten
+            slot.querySelectorAll("script").forEach(oldScript => {
+              const newScript = document.createElement("script");
+              Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+              newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+              oldScript.parentNode.replaceChild(newScript, oldScript);
+            });
+          })
+          .catch(err => {
+            slot.innerHTML = `<p style="color: #ef4444; font-size: 13px;">Kan <code>${file}</code> niet inladen. Controleer of het bestand bestaat op GitHub.</p>`;
+          });
       });
-
-      if (closeBtn && modal) {
-        closeBtn.addEventListener("click", function () {
-          modal.style.display = "none";
-        });
-      }
-
-      // ----------------------------------------------------
-      // 4. Workflow Tijdwinst Calculator Logic
-      // ----------------------------------------------------
-      const teamInput = document.getElementById("team-size-input");
-      const teamDisplay = document.getElementById("team-size-display");
-      const hoursInput = document.getElementById("hours-input");
-      const hoursDisplay = document.getElementById("hours-display");
-      const rateInput = document.getElementById("hourly-rate-input");
-      const primaryResult = document.getElementById("calc-primary-result");
-      const secondaryResult = document.getElementById("calc-secondary-result");
-
-      function formatEuro(amount) {
-        return "€ " + Math.round(amount).toLocaleString("nl-NL");
-      }
-
-      function calculateSavings() {
-        const teamSize = parseInt(teamInput.value, 10);
-        const hoursPerPerson = parseFloat(hoursInput.value);
-        const hourlyRate = parseFloat(rateInput.value) || 45;
-
-        // Displays updaten
-        teamDisplay.textContent = teamSize + (teamSize === 1 ? " persoon" : " personen");
-        hoursDisplay.textContent = hoursPerPerson + " uur / week";
-
-        // Totaal uren per week verloren
-        const totalHoursLostPerWeek = teamSize * hoursPerPerson;
-
-        // Aanname: een gestructureerde centrale Notion-hub met SOP's elimineert minimaal 70% van deze repetitieve frictie
-        const efficiencyGain = 0.70;
-        const hoursSavedPerWeek = totalHoursLostPerWeek * efficiencyGain;
-
-        // Maand- en jaarkosten (gemiddeld 4,33 weken per maand)
-        const weeklyCostSaved = hoursSavedPerWeek * hourlyRate;
-        const monthlySavings = weeklyCostSaved * 4.33;
-        const yearlySavings = monthlySavings * 12;
-
-        // Teksten realtime renderen
-        primaryResult.innerHTML = `
-          Je team verliest <span class="loss-highlight">${totalHoursLostPerWeek} uur per week</span>; een geautomatiseerde hub bespaart <span class="save-highlight">${formatEuro(monthlySavings)} per maand</span>.
-        `;
-
-        secondaryResult.innerHTML = `
-          Dit levert jaarlijks ongeveer <strong>${formatEuro(yearlySavings)}</strong> aan herwonnen productiviteit en <strong>${Math.round(hoursSavedPerWeek * 52)} uur extra focus</strong> op.
-        `;
-      }
-
-      // Event Listeners voor realtime slider updates
-      if (teamInput && hoursInput && rateInput) {
-        teamInput.addEventListener("input", calculateSavings);
-        hoursInput.addEventListener("input", calculateSavings);
-        rateInput.addEventListener("input", calculateSavings);
-        calculateSavings(); // Initial calculation
-      }
     });
   </script>
 </body>
