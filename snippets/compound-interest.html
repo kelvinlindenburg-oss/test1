@@ -1,72 +1,173 @@
-<div class="calculator-card">
-  <h2>Compound Interest Calculator</h2>
-  
-  <label for="principal">Initial Deposit ($):</label>
-  <input type="number" id="principal" value="10000" min="0" step="100">
-
-  <label for="monthly-contrib">Monthly Contribution ($):</label>
-  <input type="number" id="monthly-contrib" value="200" min="0" step="25">
-
-  <label for="rate">Annual Interest Rate (%):</label>
-  <input type="number" id="rate" value="7" min="0" step="0.1">
-
-  <label for="years">Investment Horizon (Years):</label>
-  <input type="number" id="years" value="10" min="1" max="50">
-
-  <label for="frequency">Compounding Frequency:</label>
-  <select id="frequency">
-    <option value="1">Annually</option>
-    <option value="4">Quarterly</option>
-    <option value="12" selected>Monthly</option>
-    <option value="365">Daily</option>
-  </select>
-
-  <button id="calc-btn">Calculate Growth</button>
-
-  <div class="results" id="output">
-    <!-- Populated by JavaScript -->
-  </div>
-</div>
-
-<script>
-  function computeCompoundInterest() {
-    const P = parseFloat(document.getElementById('principal').value) || 0;
-    const monthlyPMT = parseFloat(document.getElementById('monthly-contrib').value) || 0;
-    const annualRate = (parseFloat(document.getElementById('rate').value) || 0) / 100;
-    const t = parseFloat(document.getElementById('years').value) || 0;
-    const n = parseInt(document.getElementById('frequency').value, 10) || 12;
-
-    const ratePerPeriod = annualRate / n;
-    const totalPeriods = n * t;
-
-    // Growth of initial principal: P * (1 + r/n)^(n*t)
-    const principalGrowth = P * Math.pow(1 + ratePerPeriod, totalPeriods);
-
-    // Approximate regular additions mapped to compounding period
-    const additionPerPeriod = (monthlyPMT * 12) / n;
-    let contributionGrowth = 0;
-    if (ratePerPeriod > 0) {
-      contributionGrowth = additionPerPeriod * ((Math.pow(1 + ratePerPeriod, totalPeriods) - 1) / ratePerPeriod);
-    } else {
-      contributionGrowth = additionPerPeriod * totalPeriods;
+<div class="ci-wrapper">
+  <style>
+    .ci-wrapper {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      max-width: 780px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 36px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      box-sizing: border-box;
     }
 
-    const futureValue = principalGrowth + contributionGrowth;
-    const totalDeposited = P + (monthlyPMT * 12 * t);
-    const totalInterest = futureValue - totalDeposited;
+    .ci-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      background-color: #fef2f2;
+      color: #dc2626;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
 
-    const format = (num) => new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(num);
+    .ci-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #090e17;
+      margin: 0 0 10px 0;
+      line-height: 1.25;
+    }
 
-    document.getElementById('output').innerHTML = `
-      <p><strong>Ending Balance:</strong> ${format(futureValue)}</p>
-      <p><strong>Total Principal & Deposits:</strong> ${format(totalDeposited)}</p>
-      <p><strong>Total Interest Earned:</strong> ${format(totalInterest)}</p>
-    `;
-  }
+    .ci-subtitle {
+      font-size: 15px;
+      color: #4b5563;
+      margin: 0 0 28px 0;
+      line-height: 1.5;
+    }
 
-  document.getElementById('calc-btn').addEventListener('click', computeCompoundInterest);
-  computeCompoundInterest(); // Run initial calculation on load
-</script>
+    .ci-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 620px) {
+      .ci-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .ci-form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ci-label {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 8px;
+    }
+
+    .ci-input-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .ci-input-prefix {
+      position: absolute;
+      left: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #64748b;
+      pointer-events: none;
+    }
+
+    .ci-input {
+      width: 100%;
+      height: 48px;
+      padding: 0 14px 0 32px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      background: #ffffff;
+      border: 1.5px solid #d1d5db;
+      border-radius: 10px;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .ci-input.no-prefix {
+      padding-left: 14px;
+    }
+
+    .ci-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .ci-helper {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 6px;
+    }
+
+    /* Slider sectie */
+    .ci-panel {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 24px;
+    }
+
+    .ci-slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .ci-slider-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .ci-pill-val {
+      background: #fef2f2;
+      color: #dc2626;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 8px;
+    }
+
+    .ci-range {
+      width: 100%;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 5px;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      margin: 10px 0 18px 0;
+    }
+
+    .ci-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ea580c;
+      box-shadow: 0 2px 5px rgba(234, 88, 12, 0.4);
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .ci-range::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .ci-callout {
+      border: 1px solid #fed7aa;
+      border-left: 3.
