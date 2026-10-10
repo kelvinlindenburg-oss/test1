@@ -181,4 +181,408 @@
 
     .rc-metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .rc-metric {
+      background: #f9fafb;
+      border: 1px solid #f3f4f6;
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .rc-metric-label {
+      font-size: 11px;
+      color: #6b7280;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+
+    .rc-metric-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .rc-metric-val.danger {
+      color: #dc2626;
+    }
+
+    .rc-saving-banner {
+      background: #f0fdf4;
+      border: 1.5px solid #bbf7d0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 14px;
+    }
+
+    .rc-saving-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #15803d;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .rc-saving-hero {
+      font-size: 20px;
+      font-weight: 800;
+      color: #166534;
+      margin-bottom: 4px;
+    }
+
+    .rc-saving-desc {
+      font-size: 13px;
+      color: #15803d;
+      line-height: 1.4;
+    }
+
+    .rc-cta-container {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .rc-btn-primary {
+      background: #111827;
+      color: #ffffff;
+      border: none;
+      padding: 11px 22px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: center;
+      width: auto;
+    }
+
+    .rc-btn-primary:hover {
+      background: #ff4b2b;
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 500px) {
+      .rc-btn-primary {
+        width: 100%;
+      }
+    }
+
+    /* Modal Formulier */
+    .rc-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.65);
+      z-index: 999999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    .rc-modal-overlay.is-active {
+      display: flex;
+    }
+
+    .rc-modal-card {
+      background: #ffffff;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 480px;
+      padding: 24px;
+      position: relative;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .rc-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #9ca3af;
+    }
+
+    .rc-modal-close:hover {
+      color: #111827;
+    }
+
+    .rc-summary-box {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12px;
+      color: #4b5563;
+      margin: 14px 0 18px;
+    }
+
+    .rc-summary-box b {
+      color: #111827;
+    }
+  </style>
+
+  <span class="rc-badge">Productivity & Cost Audit</span>
+  <h2 class="rc-title">Calculator: Verloren Tijd & Kosten door Repetitief Werk</h2>
+  <p class="rc-subtitle">Krijg inzicht in de werkelijke werkgeverskosten die weglekken aan organiseren in plaats van uitvoeren.</p>
+
+  <!-- Input Velden -->
+  <div class="rc-grid-inputs">
+    <div class="rc-field">
+      <label for="rc-cost-emp">Gem. personeelskosten werkgever / mnd:</label>
+      <div class="rc-input-group">
+        <span class="rc-input-prefix">€</span>
+        <input type="number" id="rc-cost-emp" class="rc-input has-prefix" value="4500" min="1000" step="250" />
+      </div>
+      <div class="rc-help-text">Salaris + sociale lasten, pensioen & overhead per fte.</div>
+    </div>
+
+    <div class="rc-field">
+      <label for="rc-team-size">Teamgrootte (aantal medewerkers):</label>
+      <input type="number" id="rc-team-size" class="rc-input" value="10" min="1" max="500" step="1" />
+      <div class="rc-help-text">Directe impact berekend over het gehele team.</div>
+    </div>
+  </div>
+
+  <!-- Slider: Minuten repetitief per dag -->
+  <div class="rc-slider-box">
+    <div class="rc-slider-header">
+      <span class="rc-slider-title">Minuten per werknemer per dag aan repetitieve taken:</span>
+      <span class="rc-slider-val" id="rc-minutes-display">60 min / dag</span>
+    </div>
+    <input type="range" id="rc-minutes-slider" class="rc-slider" min="15" max="180" step="5" value="60" />
+
+    <div class="rc-explainer">
+      💡 <em>Repetitieve taken lijken vaak maar een paar minuten te kosten, maar opgeteld kunnen ze dagelijks behoorlijk wat tijd in beslag nemen. Denk aan het beantwoorden van e-mails, het zoeken naar informatie, het bijwerken van documenten en het plannen van taken. Door deze kleine handelingen stapelen de verloren minuten zich op, waardoor je uiteindelijk veel tijd kwijt bent aan organiseren in plaats van aan je belangrijkste werkzaamheden.</em>
+    </div>
+  </div>
+
+  <!-- Output Dashboard -->
+  <div class="rc-results-card">
+    <div class="rc-metrics-grid">
+      <div class="rc-metric">
+        <div class="rc-metric-label">Verloren tijd (Team)</div>
+        <div class="rc-metric-val danger" id="rc-lost-hours-week">0 uur / week</div>
+        <div style="font-size: 11px; color: #6b7280; margin-top: 2px;" id="rc-lost-hours-month">0 uur / maand</div>
+      </div>
+      <div class="rc-metric">
+        <div class="rc-metric-label">Verloren kosten / mnd</div>
+        <div class="rc-metric-val danger" id="rc-lost-cost-month">€ 0</div>
+        <div style="font-size: 11px; color: #6b7280; margin-top: 2px;" id="rc-lost-cost-year">€ 0 / jaar</div>
+      </div>
+      <div class="rc-metric">
+        <div class="rc-metric-label">Besparingspotentieel</div>
+        <div class="rc-metric-val" id="rc-pct-display" style="color: #ff4b2b;">10% - 15%</div>
+        <div style="font-size: 11px; color: #6b7280; margin-top: 2px;">op basis van repetitiviteit</div>
+      </div>
+    </div>
+
+    <!-- Nettobesparing Hub -->
+    <div class="rc-saving-banner">
+      <div class="rc-saving-title">Verwachte Nettobesparing met een Centrale Hub</div>
+      <div class="rc-saving-hero" id="rc-saving-hero">€ 0 - € 0 / maand</div>
+      <div class="rc-saving-desc" id="rc-saving-year-desc">
+        Goed voor een jaarlijkse herwonnen capaciteit en budget van circa <strong>€ 0</strong>.
+      </div>
+    </div>
+
+    <!-- CTA Trigger -->
+    <div class="rc-cta-container">
+      <span style="font-size: 12px; color: #6b7280;">Berekend op 154 werkbare uren per maand per fte.</span>
+      <button type="button" class="rc-btn-primary" id="rc-open-intake-btn">Plan een intake →</button>
+    </div>
+  </div>
+
+  <!-- MODAL: Intake Formulier gekoppeld aan de calculator -->
+  <div class="rc-modal-overlay" id="rc-intake-modal">
+    <div class="rc-modal-card">
+      <button type="button" class="rc-modal-close" id="rc-close-intake-btn">&times;</button>
+      <span class="rc-badge" style="font-size: 10px;">SEIO Workflow Audit</span>
+      <h3 style="font-size: 18px; margin: 4px 0 6px 0;">Plan je Intake & Besparingsgesprek</h3>
+      <p style="font-size: 13px; color: #4b5563; margin-bottom: 12px;">We nemen je berekende gegevens mee om een gerichte roadmap voor jouw team op te stellen.</p>
+
+      <!-- Automatische Samenvatting van de inputs -->
+      <div class="rc-summary-box" id="rc-modal-summary">
+        Gegevens worden klaargezet...
+      </div>
+
+      <form id="rc-intake-form">
+        <div style="margin-bottom: 12px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Naam *</label>
+          <input type="text" id="rc-lead-name" class="rc-input" required placeholder="Je naam of bedrijfsnaam" />
+        </div>
+        <div style="margin-bottom: 12px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">E-mailadres *</label>
+          <input type="email" id="rc-lead-email" class="rc-input" required placeholder="naam@bedrijf.nl" />
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Aanvullende toelichting / specifieke tools (optioneel)</label>
+          <textarea id="rc-lead-notes" class="rc-input" rows="3" placeholder="Bijv: We gebruiken nu Slack, Asana en losse documenten..."></textarea>
+        </div>
+
+        <button type="submit" class="rc-btn-primary" style="width: 100%;">Bevestig & Verstuur Intake-uitnodiging</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const root = document.getElementById("seio-rep-calc");
+    if (!root) return;
+
+    // Elements
+    const costEmpInput = root.querySelector("#rc-cost-emp");
+    const teamSizeInput = root.querySelector("#rc-team-size");
+    const minSlider = root.querySelector("#rc-minutes-slider");
+    const minDisplay = root.querySelector("#rc-minutes-display");
+
+    // Outputs
+    const lostHoursWeek = root.querySelector("#rc-lost-hours-week");
+    const lostHoursMonth = root.querySelector("#rc-lost-hours-month");
+    const lostCostMonth = root.querySelector("#rc-lost-cost-month");
+    const lostCostYear = root.querySelector("#rc-lost-cost-year");
+    const pctDisplay = root.querySelector("#rc-pct-display");
+    const savingHero = root.querySelector("#rc-saving-hero");
+    const savingYearDesc = root.querySelector("#rc-saving-year-desc");
+
+    // Modal elements
+    const openIntakeBtn = root.querySelector("#rc-open-intake-btn");
+    const closeIntakeBtn = root.querySelector("#rc-close-intake-btn");
+    const modal = root.querySelector("#rc-intake-modal");
+    const modalSummary = root.querySelector("#rc-modal-summary");
+    const intakeForm = root.querySelector("#rc-intake-form");
+
+    let currentStats = {};
+
+    function formatEuro(num) {
+      return "€ " + Math.round(num).toLocaleString("nl-NL");
+    }
+
+    function calculate() {
+      const costPerEmployee = Math.max(500, parseFloat(costEmpInput.value) || 0);
+      const teamSize = Math.max(1, parseInt(teamSizeInput.value, 10) || 1);
+      const minutesPerDay = parseInt(minSlider.value, 10);
+
+      minDisplay.textContent = minutesPerDay + " min / dag";
+
+      // Aannames standaard werkbaar:
+      // 5 werkdagen per week, gem. 21,7 werkdagen per maand, 154 uur per maand (ca. 7,1 uur/dag)
+      const workDaysPerMonth = 21.7;
+      const workHoursPerMonth = 154;
+      const hourlyRateEmp = costPerEmployee / workHoursPerMonth;
+
+      // Verloren uren
+      const lostHoursPerPersonPerDay = minutesPerDay / 60;
+      const lostHoursPerPersonPerWeek = lostHoursPerPersonPerDay * 5;
+      const lostHoursTeamPerWeek = lostHoursPerPersonPerWeek * teamSize;
+      const lostHoursTeamPerMonth = lostHoursPerPersonPerDay * workDaysPerMonth * teamSize;
+
+      // Totale verloren werkgeverskosten aan repetitief werk
+      const totalLostCostMonth = lostHoursTeamPerMonth * hourlyRateEmp;
+      const totalLostCostYear = totalLostCostMonth * 12;
+
+      // Realistisch besparingspercentage: 5% tot 20%
+      // Schalen op basis van minuten (15 min = 5% tot 10%; 180 min = 15% tot 20%)
+      const sliderRatio = (minutesPerDay - 15) / (180 - 15); // 0.0 tot 1.0
+      const minPct = 5 + (sliderRatio * 10);  // schaalt tussen 5% en 15%
+      const maxPct = 10 + (sliderRatio * 10); // schaalt tussen 10% en 20%
+
+      pctDisplay.textContent = Math.round(minPct) + "% - " + Math.round(maxPct) + "%";
+
+      // Verwachte netto-besparing
+      const netSavingsMonthMin = totalLostCostMonth * (minPct / 100);
+      const netSavingsMonthMax = totalLostCostMonth * (maxPct / 100);
+      const netSavingsYearAvg = ((netSavingsMonthMin + netSavingsMonthMax) / 2) * 12;
+
+      // Renderen
+      lostHoursWeek.textContent = Math.round(lostHoursTeamPerWeek) + " uur / week";
+      lostHoursMonth.textContent = "~" + Math.round(lostHoursTeamPerMonth) + " uur / maand over team";
+      lostCostMonth.textContent = formatEuro(totalLostCostMonth);
+      lostCostYear.textContent = formatEuro(totalLostCostYear) + " / jaar";
+
+      savingHero.textContent = formatEuro(netSavingsMonthMin) + " - " + formatEuro(netSavingsMonthMax) + " / mnd";
+      savingYearDesc.innerHTML = "Goed voor een geschatte jaarlijkse nettobesparing van circa <strong>" + formatEuro(netSavingsYearAvg) + "</strong> en <strong>" + Math.round((lostHoursTeamPerMonth * ((minPct + maxPct) / 200)) * 12) + " herwonnen focus-uren</strong>.";
+
+      // Gegevens opslaan voor formulier
+      currentStats = {
+        teamSize: teamSize,
+        costPerEmp: costPerEmployee,
+        minutes: minutesPerDay,
+        lostHoursTeamWeek: Math.round(lostHoursTeamPerWeek),
+        lostCostYear: formatEuro(totalLostCostYear),
+        savingRangeMonth: formatEuro(netSavingsMonthMin) + " - " + formatEuro(netSavingsMonthMax),
+        savingYearAvg: formatEuro(netSavingsYearAvg)
+      };
+    }
+
+    // Event listeners inputs
+    costEmpInput.addEventListener("input", calculate);
+    teamSizeInput.addEventListener("input", calculate);
+    minSlider.addEventListener("input", calculate);
+
+    // Modal openen & invullen
+    openIntakeBtn.addEventListener("click", function () {
+      modalSummary.innerHTML = `
+        <strong>Jouw calculator audit:</strong><br>
+        • Teamgrootte: <b>${currentStats.teamSize} medewerkers</b> (€ ${currentStats.costPerEmp}/mnd gem.)<br>
+        • Repetitieve frictie: <b>${currentStats.minutes} min / dag</b> (~${currentStats.lostHoursTeamWeek} uur/week teamverlies)<br>
+        • Potentiële nettobesparing: <b>${currentStats.savingRangeMonth} per maand</b> (~${currentStats.savingYearAvg}/jaar)
+      `;
+      modal.classList.add("is-active");
+    });
+
+    closeIntakeBtn.addEventListener("click", function () {
+      modal.classList.remove("is-active");
+    });
+
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) modal.classList.remove("is-active");
+    });
+
+    // Form submit -> mailto met alle data voorbereid
+    intakeForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = root.querySelector("#rc-lead-name").value;
+      const email = root.querySelector("#rc-lead-email").value;
+      const notes = root.querySelector("#rc-lead-notes").value;
+
+      const subject = encodeURIComponent("Aanvraag SEIO Intake & Besparingsaudit - " + name);
+      const body = encodeURIComponent(
+        "Hallo Kelvin,\n\n" +
+        "Hierbij vraag ik een intake aan op basis van de Workflow Calculator:\n\n" +
+        "--- CALCULATOR GEGEVENS ---\n" +
+        "• Bedrijfsnaam/Contact: " + name + " (" + email + ")\n" +
+        "• Teamgrootte: " + currentStats.teamSize + " medewerkers\n" +
+        "• Gemiddelde werkgeverskost: € " + currentStats.costPerEmp + " / maand per fte\n" +
+        "• Repetitieve taken per persoon: " + currentStats.minutes + " min / dag\n" +
+        "• Verloren uren team: " + currentStats.lostHoursTeamWeek + " uur per week\n" +
+        "• Geschat verloren loonbedrag: " + currentStats.lostCostYear + " per jaar\n" +
+        "• Berekende nettobesparing hub: " + currentStats.savingRangeMonth + " per maand\n\n" +
+        "--- TOELICHTING / TOOLS ---\n" +
+        (notes ? notes : "Geen extra toelichting") + "\n\n" +
+        "Graag plan ik een korte sessie om de Notion architectuur en roadmap door te nemen."
+      );
+
+      // Open mail client met kant-en-klare data
+      window.location.href = "mailto:Kelvinlindenburg@gmail.com?subject=" + subject + "&body=" + body;
+      modal.classList.remove("is-active");
+    });
+
+    // Start direct met berekening
+    calculate();
+  })();
+</script>
