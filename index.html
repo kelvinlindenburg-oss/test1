@@ -107,6 +107,176 @@
     #backToTopBtn:hover {
       background-color: #374151;
     }
+
+    /* -------------------------------------------
+       SNIPPET 5: Notion Blueprint Generator Styles
+       ------------------------------------------- */
+    .blueprint-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #ff4b2b;
+      background: #fff1ee;
+      border: 1px solid #ffd8cf;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin: 12px 0 20px;
+    }
+    .profile-btn {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      color: #374151;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 500;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .profile-btn:hover {
+      border-color: #9ca3af;
+      background: #f3f4f6;
+    }
+    .profile-btn.active {
+      border-color: #ff4b2b;
+      background: #fff5f3;
+      color: #ff4b2b;
+      font-weight: 600;
+    }
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin: 12px 0 24px;
+    }
+    .check-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      user-select: none;
+      transition: border-color 0.2s;
+    }
+    .check-label:hover {
+      border-color: #9ca3af;
+    }
+    .check-label input {
+      accent-color: #ff4b2b;
+      cursor: pointer;
+    }
+
+    /* Accordion / Matrix */
+    .accordion-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      background: #ffffff;
+      margin-bottom: 8px;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
+    .accordion-header {
+      padding: 12px 16px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      font-size: 14px;
+      user-select: none;
+      background: #fdfdfd;
+    }
+    .accordion-header:hover {
+      background: #f9fafb;
+    }
+    .db-badge {
+      font-size: 11px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #4b5563;
+      margin-left: 8px;
+      font-weight: 500;
+    }
+    .accordion-icon {
+      font-size: 11px;
+      color: #9ca3af;
+      transition: transform 0.2s ease;
+    }
+    .accordion-item.open .accordion-icon {
+      transform: rotate(180deg);
+    }
+    .accordion-content {
+      padding: 14px 16px;
+      font-size: 13px;
+      color: #4b5563;
+      display: none;
+      border-top: 1px solid #f3f4f6;
+      background: #fff;
+    }
+    .accordion-item.open .accordion-content {
+      display: block;
+    }
+    .meta-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed #e5e7eb;
+    }
+    .meta-tag {
+      color: #111827;
+      font-weight: 600;
+    }
+
+    /* In-card CTA */
+    .blueprint-cta {
+      margin-top: 24px;
+      padding: 18px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .blueprint-cta h4 {
+      margin: 0 0 6px 0;
+      font-size: 15px;
+      color: #111827;
+    }
+    .blueprint-cta p {
+      margin: 0 0 12px 0;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .blueprint-btn {
+      display: inline-block;
+      background: #111827;
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 6px;
+      transition: background 0.2s ease;
+    }
+    .blueprint-btn:hover {
+      background: #ff4b2b;
+    }
   </style>
 </head>
 <body>
@@ -128,6 +298,54 @@
   <div class="container">
     <h1>Elementor Custom Code Testing Sandbox</h1>
     <p>Use this page to verify how your scripts behave before putting them on your live agency site.</p>
+
+    <!-- NEW TEST: NOTION BLUEPRINT GENERATOR -->
+    <div class="card">
+      <div class="blueprint-badge">Interactive Tool</div>
+      <h2 style="margin: 0 0 8px 0; font-size: 20px;">Notion Database Blueprint Generator</h2>
+      <p style="font-size: 14px; color: #4b5563; margin-bottom: 16px;">
+        Selecteer je type organisatie en behoeften om direct de aanbevolen Notion-architectuur te bekijken.
+      </p>
+
+      <strong style="font-size: 13px;">1. Type organisatie:</strong>
+      <div class="profile-grid">
+        <button class="profile-btn active" data-profile="freelancer">Freelancer</button>
+        <button class="profile-btn" data-profile="agency">Marketing Agency</button>
+        <button class="profile-btn" data-profile="ecommerce">E-commerce Brand</button>
+        <button class="profile-btn" data-profile="inhouse">In-House Team</button>
+      </div>
+
+      <strong style="font-size: 13px;">2. Wat wil je structureren?</strong>
+      <div class="checklist-grid">
+        <label class="check-label">
+          <input type="checkbox" id="check-clients" checked>
+          <span>Klanten & CRM</span>
+        </label>
+        <label class="check-label">
+          <input type="checkbox" id="check-tasks" checked>
+          <span>Projecten & Sprints</span>
+        </label>
+        <label class="check-label">
+          <input type="checkbox" id="check-content" checked>
+          <span>Content & Media</span>
+        </label>
+        <label class="check-label">
+          <input type="checkbox" id="check-docs" checked>
+          <span>SOP's & Kennisbank</span>
+        </label>
+      </div>
+
+      <strong style="font-size: 13px;">3. Jouw Database Matrix:</strong>
+      <div id="blueprint-container" style="margin-top: 10px;">
+        <!-- Inhoud wordt dynamisch geladen door JS -->
+      </div>
+
+      <div class="blueprint-cta">
+        <h4>Wil je dat SEIO dit voor je inricht?</h4>
+        <p>Wij bouwen en automatiseren deze complete Notion-architectuur voor jouw team.</p>
+        <a href="mailto:Kelvinlindenburg@gmail.com?subject=Notion%20Blueprint%20Inrichting" class="blueprint-btn">Boek een Meeting</a>
+      </div>
+    </div>
 
     <div class="card">
       <h3>Test 1: Reading Progress Bar</h3>
@@ -217,7 +435,78 @@
         modal.style.display = "none";
       });
     }
-    
-  </script>
-</body>
-</html>
+
+    // -------------------------------------------
+    // 4. Notion Database Blueprint Logic
+    // -------------------------------------------
+    const DB_DATA = {
+      clients: {
+        title: "CRM & Relaties",
+        badge: "Core DB",
+        desc: {
+          freelancer: "Centraal overzicht van leads, opdrachtgevers, afgesproken tarieven en contacthistorie.",
+          agency: "Uitgebreid accountoverzicht met retainers, projectmanagers, contacts en debiteurenstatus.",
+          ecommerce: "Overzicht van B2B partners, influencer-samenwerkingen, affiliate deals en leveranciers.",
+          inhouse: "Stakeholders, externe bureaus/freelancers en interne divisieleiders."
+        },
+        relations: "Projecten & Taken, Financiën/Facturatie",
+        views: "Kanban (Pipeline), Tabel (Actieve accounts), Lijst (Contactpersonen)"
+      },
+      tasks: {
+        title: "Projecten & Sprints",
+        badge: "Workflow Engine",
+        desc: {
+          freelancer: "Lichtgewicht bord met actieve opdrachten, to-do's en directe urenregistratie.",
+          agency: "Per-klant gefilterde sprintboards met deadlines, taakeigenaren en scope-tracking.",
+          ecommerce: "Lanceringsprojecten, product-drops, fotoshoots en seizoensgebonden acties.",
+          inhouse: "Kwartaal-roadmaps (OKR's), multidisciplinaire taken en marketing-sprints."
+        },
+        relations: "CRM, Contentkalender, SOP's",
+        views: "Board (Per status), Tijdlijn (Gantt-planning), Kalender (Deadlines)"
+      },
+      content: {
+        title: "Content & Campagnes",
+        badge: "Media Hub",
+        desc: {
+          freelancer: "Persoonlijke branding kalender voor LinkedIn artikelen, posts en nieuwsbrieven.",
+          agency: "Multi-client contentkalender voor social copy, Google/Meta Ads en SEO-artikelen.",
+          ecommerce: "E-mailflows, promotiecampagnes, productteksten en visual assets.",
+          inhouse: "Omnichannel contentplanning (Blog/GEO, Socials, Productnieuws en PR)."
+        },
+        relations: "Projecten & Taken, Brand SOP's",
+        views: "Kalender (Publicatiedatum), Board (Fase: Idee → Copy → Review → Live)"
+      },
+      docs: {
+        title: "SOP's & Kennisbank",
+        badge: "Knowledge Hub",
+        desc: {
+          freelancer: "Persoonlijke templates, tool-logins, contract-voorbeelden en checklistjes.",
+          agency: "Standaard werkprocessen, kwaliteits-QA, stappenplannen en team-onboarding guides.",
+          ecommerce: "Richtlijnen voor voorraad, klantenservice-scripts en creative brand guidelines.",
+          inhouse: "Merkrichtlijnen, tracking & tagging documentatie en het marketing playbook."
+        },
+        relations: "Projecten & Taken (voor directe taakinstructies)",
+        views: "Lijst (Per categorie), Gallery (Belangrijkste handboeken)"
+      }
+    };
+
+    let selectedProfile = "freelancer";
+    const profileBtns = document.querySelectorAll(".profile-btn");
+    const checkClients = document.getElementById("check-clients");
+    const checkTasks = document.getElementById("check-tasks");
+    const checkContent = document.getElementById("check-content");
+    const checkDocs = document.getElementById("check-docs");
+    const blueprintContainer = document.getElementById("blueprint-container");
+
+    function updateBlueprint() {
+      if (!blueprintContainer) return;
+      blueprintContainer.innerHTML = "";
+
+      const activeKeys = [];
+      if (checkClients && checkClients.checked) activeKeys.push("clients");
+      if (checkTasks && checkTasks.checked) activeKeys.push("tasks");
+      if (checkContent && checkContent.checked) activeKeys.push("content");
+      if (checkDocs && checkDocs.checked) activeKeys.push("docs");
+
+      if (activeKeys.length === 0) {
+        blueprintContainer.innerHTML = '<p style="font-size: 13px; color: #9
